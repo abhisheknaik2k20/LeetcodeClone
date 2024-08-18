@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/CodeScreen/Containers/graph.dart';
-import 'package:leetcodeclone/Problemset/examples/exampleprobs.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/graph.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class Submissions extends StatefulWidget {
   const Submissions({super.key});

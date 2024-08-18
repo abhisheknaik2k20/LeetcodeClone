@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:leetcodeclone/Problemset/containers/homescreen.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/containers/homescreen.dart';
 import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
-import 'package:leetcodeclone/VerifyMail/verifyMail.dart';
+import 'package:leetcodeclone/Auth_Profile_Logic/VerifyMail/verifyMail.dart';
 import 'package:leetcodeclone/Welcome/welcome.dart';
 
 void loginLogic(BuildContext context, String email, String password) async {
@@ -70,7 +70,7 @@ void logoutLogic(BuildContext context) async {
   Navigator.of(context).pop();
   if (isLoginOutSuccessful) {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+      MaterialPageRoute(builder: (context) => WelcomeScreen()),
       (Route<dynamic> route) => false,
     );
   }

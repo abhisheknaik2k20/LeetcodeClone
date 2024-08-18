@@ -6,7 +6,7 @@ import 'package:highlight/languages/cpp.dart';
 import 'package:highlight/languages/java.dart';
 import 'package:flutter_highlight/themes/monokai-sublime.dart';
 import 'package:leetcodeclone/AWS/Call_Logic/compiler_call.dart';
-import 'package:leetcodeclone/Problemset/examples/exampleprobs.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 import '../providers.dart';
 
 class Texteditor extends ConsumerStatefulWidget {

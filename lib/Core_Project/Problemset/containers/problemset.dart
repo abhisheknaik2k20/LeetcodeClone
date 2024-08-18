@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/CodeScreen/blackscreen.dart';
-import 'package:leetcodeclone/Problemset/containers/companies.dart';
-import 'package:leetcodeclone/Problemset/examples/exampleprobs.dart';
-import 'package:leetcodeclone/Problemset/containers/stats.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/blackscreen.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/containers/companies.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/containers/stats.dart';
 import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
 
 class ProblemsetMenu extends StatefulWidget {

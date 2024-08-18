@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Login_SignUp/login.dart';
+import 'package:leetcodeclone/Auth_Profile_Logic/login.dart';
 import 'package:leetcodeclone/Welcome/styles/styles.dart';
 import 'package:leetcodeclone/Welcome/widgets/small_widgets.dart';
 import 'dart:math' as math;

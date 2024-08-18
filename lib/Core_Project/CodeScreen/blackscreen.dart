@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/CodeScreen/dragcontain.dart';
-import 'package:leetcodeclone/Problemset/examples/exampleprobs.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/dragcontain.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class BlackScreen extends StatefulWidget {
   final Problem problem;

@@ -73,7 +73,7 @@ def execute_cpp_code(code):
         run_result = subprocess.run(
             ['/tmp/temp'],
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            stderr=subprocess.PIPEm
         )
         print('Run result:', run_result.returncode)
         return run_result.stdout.decode()

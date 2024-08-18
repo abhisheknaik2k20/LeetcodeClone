@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Login_SignUp/login_signup.dart';
-import 'package:leetcodeclone/Problemset/styles/styles.dart';
-import 'package:leetcodeclone/Profile/ProfilePage.dart';
+import 'package:leetcodeclone/Auth_Profile_Logic/login_signup.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/styles/styles.dart';
+import 'package:leetcodeclone/Auth_Profile_Logic/Profile/ProfilePage.dart';
 
 class HomeAppBar extends StatefulWidget {
   final Function(String) setItem;
@@ -58,7 +58,7 @@ class _HomeAppBar extends State<HomeAppBar> {
             for (String buttonText in [
               "Problems",
               "Contest",
-              "Discuss",
+              "Road-Map",
               "Interview",
             ])
               Padding(
@@ -196,8 +196,8 @@ class _HomeAppBar extends State<HomeAppBar> {
     return InkWell(
       onTap: () {
         if (label == "Profile") {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const LeetCodeProfile()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const LeetCodeProfile()));
         }
       },
       child: Container(

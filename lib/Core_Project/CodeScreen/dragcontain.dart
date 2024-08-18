@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/CodeScreen/Containers/console.dart';
-import 'package:leetcodeclone/CodeScreen/Containers/description.dart';
-import 'package:leetcodeclone/CodeScreen/Containers/submission.dart';
-import 'package:leetcodeclone/CodeScreen/Containers/testcase.dart';
-import 'package:leetcodeclone/CodeScreen/Containers/texteditor.dart';
-import 'package:leetcodeclone/Problemset/examples/exampleprobs.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/console.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/description.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/submission.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/testcase.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/texteditor.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class DraggableResizableContainer extends StatefulWidget {
   final Problem problem;
@@ -197,7 +197,7 @@ class _DraggableResizableContainerState
       case 'Solutions':
         return const Submissions();
       case 'Console':
-        return Console();
+        return const Console();
       default:
         return const Text('Unknown', style: TextStyle(color: Colors.white));
     }

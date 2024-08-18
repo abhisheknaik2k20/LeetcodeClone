@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Contest/banner.dart';
-import 'package:leetcodeclone/Contest/featured.dart';
-import 'package:leetcodeclone/Problemset/containers/ads_cal.dart';
-import 'package:leetcodeclone/Problemset/containers/appbar.dart';
-import 'package:leetcodeclone/Problemset/containers/problemset.dart';
+import 'package:leetcodeclone/Core_Project/Contest/banner.dart';
+import 'package:leetcodeclone/Core_Project/Contest/featured.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/containers/ads_cal.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/containers/appbar.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/containers/problemset.dart';
 
 class LeetCodeProblemsetHomescreen extends StatefulWidget {
   final Size size;
@@ -64,10 +64,7 @@ class _LeetCodeProblemsetHomescreenState
                 ScreenBanner(size: widget.size),
                 FeaturedContest(size: widget.size)
               ],
-            _ => [
-                //ScreenBanner(size: widget.size),
-                //FeaturedContest(size: widget.size)
-              ]
+            _ => []
           },
         ],
       ),

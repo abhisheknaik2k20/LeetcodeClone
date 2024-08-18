@@ -54,6 +54,7 @@ dependencies:
   google_sign_in_web: ^0.12.4+2
   flutter_web_auth: ^0.3.0
   flutter_riverpod: ^2.5.1
+  flutter_webrtc: ^0.11.6+hotfix.1
   
 dev_dependencies:
   flutter_test:

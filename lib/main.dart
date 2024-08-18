@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:leetcodeclone/Problemset/containers/homescreen.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/containers/homescreen.dart';
 import 'package:leetcodeclone/Welcome/welcome.dart';
 import 'package:leetcodeclone/firebase_options.dart';
 
@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: user == null
-          ? const WelcomeScreen()
-          : LeetCodeProblemsetHomescreen(size: MediaQuery.of(context).size),
+          ? WelcomeScreen()
+          : LeetCodeProblemsetHomescreen(size: MediaQuery.sizeOf(context)),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Contest/leaderboard.dart';
-import 'package:leetcodeclone/Contest/prev_contest.dart';
+import 'package:leetcodeclone/Core_Project/Contest/leaderboard.dart';
+import 'package:leetcodeclone/Core_Project/Contest/prev_contest.dart';
 import 'package:leetcodeclone/ImageScr/contestscreen.dart';
 
 class FeaturedContest extends StatelessWidget {
