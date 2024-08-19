@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -70,7 +71,7 @@ void logoutLogic(BuildContext context) async {
   Navigator.of(context).pop();
   if (isLoginOutSuccessful) {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => WelcomeScreen()),
+      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
       (Route<dynamic> route) => false,
     );
   }
@@ -81,6 +82,14 @@ Future<UserCredential?> signInWithGoogle(BuildContext context) async {
   try {
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
+    final userDoc = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid);
+    final docSnapshot = await userDoc.get();
+    if (!docSnapshot.exists || !docSnapshot.data()!.containsKey('roadmap')) {
+      await userDoc.set({"roadmap": null}, SetOptions(merge: true));
+    }
+
     return userCredential;
   } on FirebaseAuthException catch (e) {
     showSnackBar(context, e.message!);

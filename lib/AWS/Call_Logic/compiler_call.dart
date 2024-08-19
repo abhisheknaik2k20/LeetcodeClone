@@ -27,7 +27,7 @@ Future<Map<String, dynamic>> callCompiler(
       };
     }
   } catch (e) {
-    Navigator.of(context).pop(); // Remove the circular progress indicator
+    Navigator.of(context).pop();
     if (e is http.ClientException) {
       print('ClientException: ${e.message}');
       return {'error': 'ClientException: ${e.message}'};
@@ -35,5 +35,57 @@ Future<Map<String, dynamic>> callCompiler(
       print('Error: $e');
       return {'error': 'Error: $e'};
     }
+  }
+}
+
+Future<Map<String, dynamic>> invokeLambdaFunction({
+  required String userId,
+  required String reason,
+  required String skillLevel,
+  required List<String> topics,
+  required List<String> journey,
+}) async {
+  try {
+    final url = dotenv.env['recommender'];
+    if (url == null || url.isEmpty) {
+      throw Exception('Recommender URL is not set in environment variables');
+    }
+
+    print("Request made to: $url");
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'user_data': {
+          'user_id': userId,
+          'topics': topics,
+          'journey': journey,
+        },
+        'reason': reason,
+        'skillLevel': skillLevel,
+      }),
+    );
+
+    //print("Response status: ${response.statusCode}");
+    //print("Response body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      return responseBody;
+    } else {
+      return {
+        'error': 'Failed to invoke Lambda function',
+        'status': response.statusCode,
+        'body': response.body,
+      };
+    }
+  } catch (e) {
+    print("Error in invokeLambdaFunction: $e");
+    return {
+      'error': 'Error invoking Lambda function',
+      'details': e.toString(),
+    };
   }
 }

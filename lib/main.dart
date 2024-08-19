@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: user == null
-          ? WelcomeScreen()
+          ? const WelcomeScreen()
           : LeetCodeProblemsetHomescreen(size: MediaQuery.sizeOf(context)),
     );
   }
