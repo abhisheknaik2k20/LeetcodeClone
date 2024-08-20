@@ -26,8 +26,6 @@ class Contest {
         content: List<Map<String, dynamic>>.from(data['content'] ?? []),
         reg_ids: List<String>.from(data['reg_ids'] ?? []));
   }
-
-  // Method to convert Contest object to a Map for Firestore
   Map<String, dynamic> toFirestore() {
     return {
       'Contest_id': Contest_id,

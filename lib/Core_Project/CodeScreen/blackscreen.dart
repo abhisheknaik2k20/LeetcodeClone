@@ -3,9 +3,16 @@ import 'package:leetcodeclone/Core_Project/CodeScreen/dragcontain.dart';
 import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class BlackScreen extends StatefulWidget {
+  final String? teamid;
   final Problem problem;
   final Size size;
-  const BlackScreen({required this.problem, required this.size, super.key});
+  final bool isOnline;
+  const BlackScreen(
+      {required this.teamid,
+      required this.isOnline,
+      required this.problem,
+      required this.size,
+      super.key});
 
   @override
   State<BlackScreen> createState() => _BlackScreenState();
@@ -16,6 +23,14 @@ class _BlackScreenState extends State<BlackScreen> {
   List<Map<String, dynamic>> availableContainers = [
     {'name': 'Description', 'icon': Icons.description, 'color': Colors.red},
     {'name': 'Code', 'icon': Icons.code, 'color': Colors.blue},
+    {'name': 'Solutions', 'icon': Icons.lightbulb, 'color': Colors.yellow},
+    {'name': 'TestCases', 'icon': Icons.check_box, 'color': Colors.green},
+    {'name': 'Console', 'icon': Icons.check_box, 'color': Colors.indigo},
+  ];
+
+  List<Map<String, dynamic>> onlineContainers = [
+    {'name': 'Description', 'icon': Icons.description, 'color': Colors.red},
+    {'name': 'OnlineCode', 'icon': Icons.code, 'color': Colors.blue},
     {'name': 'Solutions', 'icon': Icons.lightbulb, 'color': Colors.yellow},
     {'name': 'TestCases', 'icon': Icons.check_box, 'color': Colors.green},
     {'name': 'Console', 'icon': Icons.check_box, 'color': Colors.indigo},
@@ -47,21 +62,37 @@ class _BlackScreenState extends State<BlackScreen> {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: availableContainers
-                        .map((container) => TextButton.icon(
-                              onPressed: () => _addContainer(
-                                  widget.problem,
-                                  container['name'],
-                                  container['icon'],
-                                  container['color']),
-                              icon: Icon(container['icon'],
-                                  color: container['color']),
-                              label: Text(
-                                container['name'],
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ))
-                        .toList(),
+                    children: widget.isOnline
+                        ? onlineContainers
+                            .map((container) => TextButton.icon(
+                                  onPressed: () => _addContainer(
+                                      widget.problem,
+                                      container['name'],
+                                      container['icon'],
+                                      container['color']),
+                                  icon: Icon(container['icon'],
+                                      color: container['color']),
+                                  label: Text(
+                                    container['name'],
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ))
+                            .toList()
+                        : availableContainers
+                            .map((container) => TextButton.icon(
+                                  onPressed: () => _addContainer(
+                                      widget.problem,
+                                      container['name'],
+                                      container['icon'],
+                                      container['color']),
+                                  icon: Icon(container['icon'],
+                                      color: container['color']),
+                                  label: Text(
+                                    container['name'],
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ))
+                            .toList(),
                   ),
                 ),
               ),
@@ -77,6 +108,7 @@ class _BlackScreenState extends State<BlackScreen> {
     setState(() {
       containers.add(
         DraggableResizableContainer(
+          teamid: widget.isOnline ? widget.teamid : null,
           problem: problem,
           color: color,
           icon: icon,
@@ -91,7 +123,11 @@ class _BlackScreenState extends State<BlackScreen> {
           bringToFront: _bringContainerToFront,
         ),
       );
-      availableContainers.removeWhere((container) => container['name'] == name);
+      widget.isOnline
+          ? onlineContainers
+              .removeWhere((container) => container['name'] == name)
+          : availableContainers
+              .removeWhere((container) => container['name'] == name);
     });
   }
 
@@ -107,6 +143,9 @@ class _BlackScreenState extends State<BlackScreen> {
           .removeWhere((container) => container.key == Key('container_$name'));
       if (!availableContainers.any((container) => container['name'] == name)) {
         availableContainers.add({'name': name, 'icon': icon, 'color': color});
+      }
+      if (!onlineContainers.any((container) => container['name'] == name)) {
+        onlineContainers.add({'name': name, 'icon': icon, 'color': color});
       }
     });
   }

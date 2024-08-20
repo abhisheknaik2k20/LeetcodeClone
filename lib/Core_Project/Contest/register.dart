@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:leetcodeclone/Core_Project/CodeScreen/blackscreen.dart';
 import 'package:leetcodeclone/Core_Project/Contest/contestclass.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Contest contest;
-  const RegisterScreen({required this.contest, super.key});
+  final Problem problem;
+  const RegisterScreen(
+      {required this.problem, required this.contest, super.key});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -14,9 +18,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late Duration duration;
   Timer? timer;
 
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
   final _teamNameController = TextEditingController();
   String _registrationType = 'single';
 
@@ -36,7 +37,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         : Duration.zero;
 
     if (duration == Duration.zero) {
-      // Handle case where the contest has already ended
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Contest has already ended')),
       );
@@ -50,7 +50,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           duration = duration - const Duration(seconds: 1);
         } else {
           timer?.cancel();
-          // Optionally notify the user that time has run out
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Time is up!')),
           );
@@ -62,8 +61,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void dispose() {
     timer?.cancel();
-    _nameController.dispose();
-    _emailController.dispose();
     _teamNameController.dispose();
     super.dispose();
   }
@@ -286,7 +283,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _registrationType = value!;
                     });
                   },
-                  activeColor: Colors.green,
+                  activeColor: Colors.pink[300],
                 ),
               ),
             ),
@@ -302,7 +299,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _registrationType = value!;
                     });
                   },
-                  activeColor: Colors.green,
+                  activeColor: Colors.pink[300],
                 ),
               ),
             ),
@@ -313,11 +310,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Handle join an existing team logic here
               _showJoinTeamDialog();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.pink[300],
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
               textStyle: const TextStyle(fontSize: 16),
               shape: RoundedRectangleBorder(
@@ -329,11 +325,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Handle create a new team logic here
               _showCreateTeamDialog();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.pink[300],
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
               textStyle: const TextStyle(fontSize: 16),
               shape: RoundedRectangleBorder(
@@ -349,7 +344,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _registerAsSinglePlayer();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.pink[300],
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
               textStyle: const TextStyle(fontSize: 16),
               shape: RoundedRectangleBorder(
@@ -367,17 +362,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
         title: Row(
           children: [
-            Icon(Icons.group_add, color: Colors.green[300]),
+            Icon(Icons.group_add, color: Colors.pink[300]),
             const SizedBox(width: 8),
             Text(
               'Join Team',
-              style: TextStyle(color: Colors.green[300]),
+              style: TextStyle(color: Colors.pink[300]),
             ),
           ],
         ),
@@ -399,10 +394,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 fillColor: Colors.grey[800],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.green[300]!),
+                  borderSide: BorderSide(color: Colors.pink[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green[300]!),
+                  borderSide: BorderSide(color: Colors.pink[300]!),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -412,8 +407,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
             style: TextButton.styleFrom(foregroundColor: Colors.grey[400]),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -423,7 +418,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green[300],
+              backgroundColor: Colors.pink[300],
             ),
             child: const Text('Join'),
           ),
@@ -436,17 +431,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
         ),
         title: Row(
           children: [
-            Icon(Icons.create, color: Colors.green[300]),
+            Icon(Icons.create, color: Colors.pink[300]),
             const SizedBox(width: 8),
             Text(
               'Create New Team',
-              style: TextStyle(color: Colors.green[300]),
+              style: TextStyle(color: Colors.pink[300]),
             ),
           ],
         ),
@@ -468,10 +463,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 fillColor: Colors.grey[800],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.green[300]!),
+                  borderSide: BorderSide(color: Colors.pink[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green[300]!),
+                  borderSide: BorderSide(color: Colors.pink[300]!),
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -481,18 +476,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
             style: TextButton.styleFrom(foregroundColor: Colors.grey[400]),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Team Created Successfully')),
-              );
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => BlackScreen(
+                      teamid: "abhishek",
+                      isOnline: true,
+                      problem: widget.problem,
+                      size: MediaQuery.sizeOf(context))));
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green[300],
+              backgroundColor: Colors.pink[300],
             ),
             child: const Text('Create'),
           ),

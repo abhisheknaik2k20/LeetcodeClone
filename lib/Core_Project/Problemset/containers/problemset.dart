@@ -218,6 +218,8 @@ class _ProblemsetMenuState extends State<ProblemsetMenu> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => BlackScreen(
+                              teamid: null,
+                              isOnline: false,
                               problem: problem,
                               size: MediaQuery.sizeOf(context),
                             ),

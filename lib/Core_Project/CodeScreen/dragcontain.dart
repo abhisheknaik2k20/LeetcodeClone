@@ -5,9 +5,11 @@ import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/description.dar
 import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/submission.dart';
 import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/testcase.dart';
 import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/texteditor.dart';
+import 'package:leetcodeclone/Core_Project/Contest/OnlineEditor.dart';
 import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class DraggableResizableContainer extends StatefulWidget {
+  final String? teamid;
   final Problem problem;
   final Offset initialPosition;
   final Size initialSize;
@@ -21,6 +23,7 @@ class DraggableResizableContainer extends StatefulWidget {
   final Function(Key) bringToFront;
 
   const DraggableResizableContainer({
+    required this.teamid,
     required this.problem,
     required this.color,
     required this.icon,
@@ -198,6 +201,8 @@ class _DraggableResizableContainerState
         return const Submissions();
       case 'Console':
         return const Console();
+      case 'OnlineCode':
+        return OnlineCodeEditor(teamid: widget.teamid);
       default:
         return const Text('Unknown', style: TextStyle(color: Colors.white));
     }

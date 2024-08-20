@@ -4,6 +4,7 @@ import 'package:leetcodeclone/Core_Project/Contest/contestclass.dart';
 import 'package:leetcodeclone/Core_Project/Contest/leaderboard.dart';
 import 'package:leetcodeclone/Core_Project/Contest/prev_contest.dart';
 import 'package:leetcodeclone/Core_Project/Contest/register.dart';
+import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 import 'package:leetcodeclone/ImageScr/contestscreen.dart';
 
 class FeaturedContest extends StatefulWidget {
@@ -84,6 +85,7 @@ class _FeaturedContestState extends State<FeaturedContest> {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => RegisterScreen(
+                      problem: problemexample[0],
                       contest: contests[index],
                     )));
           },
