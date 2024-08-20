@@ -8,9 +8,9 @@ import 'package:leetcodeclone/Welcome/welcome.dart';
 import 'package:leetcodeclone/firebase_options.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
   await dotenv.load(fileName: ".env");
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: MyApp()));
 }
 

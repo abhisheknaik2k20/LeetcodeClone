@@ -29,15 +29,6 @@ class _OnlineCodeEditorState extends State<OnlineCodeEditor> {
 
   Map<String, Mode> language = {"python": python, "java": java, "cpp": cpp};
 
-  void updateLanguage(String? newLanguage) {
-    if (newLanguage != null) {
-      setState(() {
-        selectedLanguage = newLanguage;
-        _codeController.language = getLanguage(newLanguage);
-      });
-    }
-  }
-
   getLanguage(String lang) {
     switch (lang) {
       case 'cpp':
@@ -165,7 +156,7 @@ class _OnlineCodeEditorState extends State<OnlineCodeEditor> {
                                   child: Text(value),
                                 );
                               }).toList(),
-                              onChanged: updateLanguage,
+                              onChanged: (_) {},
                             ),
                           ],
                         ),

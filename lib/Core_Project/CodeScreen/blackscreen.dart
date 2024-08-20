@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:leetcodeclone/Core_Project/CodeScreen/dragcontain.dart';
 import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class BlackScreen extends StatefulWidget {
   final String? teamid;
@@ -39,66 +41,92 @@ class _BlackScreenState extends State<BlackScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.isOnline) {}
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
-        height: widget.size.height,
-        width: widget.size.width,
-        child: Stack(
-          children: [
-            ...containers,
-            Positioned(
-              left: 0,
-              right: 0,
-              child: SizedBox(
-                height: 50,
-                child: Container(
-                  width: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade800,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: widget.isOnline
-                        ? onlineContainers
-                            .map((container) => TextButton.icon(
-                                  onPressed: () => _addContainer(
-                                      widget.problem,
-                                      container['name'],
-                                      container['icon'],
-                                      container['color']),
-                                  icon: Icon(container['icon'],
-                                      color: container['color']),
-                                  label: Text(
-                                    container['name'],
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ))
-                            .toList()
-                        : availableContainers
-                            .map((container) => TextButton.icon(
-                                  onPressed: () => _addContainer(
-                                      widget.problem,
-                                      container['name'],
-                                      container['icon'],
-                                      container['color']),
-                                  icon: Icon(container['icon'],
-                                      color: container['color']),
-                                  label: Text(
-                                    container['name'],
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ))
-                            .toList(),
+      body: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          widget.isOnline
+              ? SizedBox(
+                  height: 200,
+                  child: ZegoUIKitPrebuiltCall(
+                      appID: 981366997,
+                      appSign:
+                          "d187b5964b1a88237199e6e5ceba8b58060e168f5de06c56e2ab43d29086a90a",
+                      callID: widget.teamid!,
+                      userID: FirebaseAuth.instance.currentUser!.uid,
+                      userName: FirebaseAuth.instance.currentUser!.displayName!,
+                      config: ZegoUIKitPrebuiltCallConfig.groupVoiceCall()))
+              : Container(),
+          SizedBox(
+            height: widget.size.height,
+            width: widget.size.width,
+            child: Stack(
+              children: [
+                ...containers,
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: 50,
+                    child: Container(
+                      width: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: widget.isOnline
+                            ? onlineContainers
+                                .map((container) => TextButton.icon(
+                                      onPressed: () => _addContainer(
+                                          widget.problem,
+                                          container['name'],
+                                          container['icon'],
+                                          container['color']),
+                                      icon: Icon(container['icon'],
+                                          color: container['color']),
+                                      label: Text(
+                                        container['name'],
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ))
+                                .toList()
+                            : availableContainers
+                                .map((container) => TextButton.icon(
+                                      onPressed: () => _addContainer(
+                                          widget.problem,
+                                          container['name'],
+                                          container['icon'],
+                                          container['color']),
+                                      icon: Icon(container['icon'],
+                                          color: container['color']),
+                                      label: Text(
+                                        container['name'],
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ))
+                                .toList(),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
