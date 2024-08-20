@@ -1,18 +1,52 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:leetcodeclone/Core_Project/Contest/contestclass.dart';
 import 'package:leetcodeclone/Core_Project/Contest/leaderboard.dart';
 import 'package:leetcodeclone/Core_Project/Contest/prev_contest.dart';
+import 'package:leetcodeclone/Core_Project/Contest/register.dart';
 import 'package:leetcodeclone/ImageScr/contestscreen.dart';
 
-class FeaturedContest extends StatelessWidget {
+class FeaturedContest extends StatefulWidget {
   final Size size;
   const FeaturedContest({required this.size, super.key});
+
+  @override
+  State<FeaturedContest> createState() => _FeaturedContestState();
+}
+
+class _FeaturedContestState extends State<FeaturedContest> {
+  List<Contest> contests = [];
+
+  Future<List<Contest>> fetchContestsFromFirestore() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final QuerySnapshot snapshot =
+        await firestore.collection('contests').orderBy('Contest_id').get();
+    return snapshot.docs.map((doc) => Contest.fromFirestore(doc)).toList();
+  }
+
+  void generateList() async {
+    try {
+      List<Contest> fetchedContests = await fetchContestsFromFirestore();
+      setState(() {
+        contests = fetchedContests;
+      });
+    } catch (e) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    generateList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Center(
         child: SizedBox(
-          width: size.width * 0.5,
+          width: widget.size.width * 0.5,
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: Column(
@@ -24,7 +58,7 @@ class FeaturedContest extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-                _buildFeaturedContests(),
+                _buildFeaturedContests(context),
                 const SizedBox(height: 40),
                 _buildPastContestsAndRanking(),
               ],
@@ -35,26 +69,34 @@ class FeaturedContest extends StatelessWidget {
     );
   }
 
-  Widget _buildFeaturedContests() {
+  Widget _buildFeaturedContests(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(3, (i) => _buildContestItem(i)),
+      children: List.generate(3, (i) => _buildContestItem(context, i)),
     );
   }
 
-  Widget _buildContestItem(int index) {
+  Widget _buildContestItem(BuildContext context, int index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          clipBehavior: Clip.antiAlias,
-          width: size.width * 0.15,
-          height: size.height * 0.17,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: NetworkImage(featured[index]['image']),
-              fit: BoxFit.fitHeight,
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => RegisterScreen(
+                      contest: contests[index],
+                    )));
+          },
+          child: Container(
+            clipBehavior: Clip.antiAlias,
+            width: widget.size.width * 0.15,
+            height: widget.size.height * 0.17,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: NetworkImage(featured[index]['image']),
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
         ),
@@ -68,8 +110,8 @@ class FeaturedContest extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             const Text(
-              "Ended",
-              style: TextStyle(fontSize: 10, color: Colors.blue),
+              "Online",
+              style: TextStyle(fontSize: 10, color: Colors.green),
             ),
             const SizedBox(width: 5),
             Text(
@@ -102,7 +144,7 @@ class FeaturedContest extends StatelessWidget {
   Widget _buildPastContests() {
     return Container(
       padding: const EdgeInsets.all(5),
-      height: size.height * 0.85,
+      height: widget.size.height * 0.85,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -117,7 +159,9 @@ class FeaturedContest extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          PastContestsMenu(size: size),
+          PastContestsMenu(
+            size: widget.size,
+          ),
         ],
       ),
     );
@@ -125,7 +169,7 @@ class FeaturedContest extends StatelessWidget {
 
   Widget _buildGlobalRanking() {
     return SizedBox(
-      height: size.height * 0.8,
+      height: widget.size.height * 0.8,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -146,7 +190,7 @@ class FeaturedContest extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Categories(size: size),
+          Categories(size: widget.size),
         ],
       ),
     );

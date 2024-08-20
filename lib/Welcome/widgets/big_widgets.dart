@@ -4,6 +4,7 @@ import 'package:leetcodeclone/Welcome/styles/styles.dart';
 import 'package:leetcodeclone/Welcome/widgets/small_widgets.dart';
 import 'dart:math' as math;
 
+
 Widget buildAppBar(BuildContext context, Size size) {
   List<String> options = ['Explore', 'Product', 'Developer', 'Login'];
   return SliverAppBar(
@@ -43,7 +44,9 @@ Widget buildAppBar(BuildContext context, Size size) {
                 if (option == "Login") {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => LoginScreen(size: size),
+                      builder: (context) => LoginScreen(
+                        size: size,
+                      ),
                     ),
                   );
                 }

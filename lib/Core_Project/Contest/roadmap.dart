@@ -117,7 +117,7 @@ class _DSARoadmapScreenState extends State<DSARoadmapScreen>
         future: _dataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -177,16 +177,16 @@ class _DSARoadmapScreenState extends State<DSARoadmapScreen>
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.map_outlined,
+                              const Icon(Icons.map_outlined,
                                   size: 80, color: Colors.pink),
-                              SizedBox(height: 20),
-                              Text(
+                              const SizedBox(height: 20),
+                              const Text(
                                 "Create Your Coding Road-Map",
                                 style: TextStyle(
                                     fontSize: 24, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
                                 "Embark on your coding journey with a personalized LeetCode RoadMap",
                                 style: TextStyle(

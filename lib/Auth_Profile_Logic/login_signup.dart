@@ -7,7 +7,11 @@ import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
 import 'package:leetcodeclone/Auth_Profile_Logic/VerifyMail/verifyMail.dart';
 import 'package:leetcodeclone/Welcome/welcome.dart';
 
-void loginLogic(BuildContext context, String email, String password) async {
+void loginLogic(
+  BuildContext context,
+  String email,
+  String password,
+) async {
   bool isLoginSuccessful = false;
   showCircularbar(context);
   try {

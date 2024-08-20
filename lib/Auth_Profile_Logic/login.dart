@@ -9,6 +9,7 @@ typedef ValidatorFunction = String? Function(String?);
 
 class LoginScreen extends StatefulWidget {
   final Size size;
+
   const LoginScreen({required this.size, super.key});
 
   @override
@@ -115,6 +116,12 @@ class _LoginScreenState extends State<LoginScreen> {
       return 'Passwords do not match';
     }
     return null;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

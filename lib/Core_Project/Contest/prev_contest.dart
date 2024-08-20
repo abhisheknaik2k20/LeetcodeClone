@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:leetcodeclone/Core_Project/Contest/contestclass.dart';
 
 class PastContestsMenu extends StatefulWidget {
   final Size size;
@@ -12,8 +14,41 @@ class PastContestsMenu extends StatefulWidget {
 class _PastContestsMenuState extends State<PastContestsMenu> {
   int selectednum = 1;
   final sc = ScrollController();
+  // ignore: unused_field
+  bool _isLoading = true;
+
+  List<Contest> contests = [];
+
+  Future<List<Contest>> fetchContestsFromFirestore() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final QuerySnapshot snapshot =
+        await firestore.collection('contests').orderBy('Contest_id').get();
+    return snapshot.docs.map((doc) => Contest.fromFirestore(doc)).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    generateList();
+  }
+
+  void generateList() async {
+    try {
+      List<Contest> fetchedContests = await fetchContestsFromFirestore();
+      setState(() {
+        contests = fetchedContests;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    int pagelength = (contests.length / 8).ceil();
     return SizedBox(
       height: widget.size.height * 0.8,
       child: Column(
@@ -23,9 +58,9 @@ class _PastContestsMenuState extends State<PastContestsMenu> {
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               controller: sc,
-              itemCount: pastContests.length,
+              itemCount: contests.length,
               itemBuilder: (context, index) {
-                return ContestCard(contest: pastContests[index]);
+                return ContestCard(contest: contests[index]);
               },
             ),
           ),
@@ -34,7 +69,7 @@ class _PastContestsMenuState extends State<PastContestsMenu> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                for (int i = 1; i <= 4; i++)
+                for (int i = 1; i <= pagelength; i++)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.0),
                     child: ElevatedButton(
@@ -75,9 +110,7 @@ class _PastContestsMenuState extends State<PastContestsMenu> {
 
 class ContestCard extends StatelessWidget {
   final Contest contest;
-
   const ContestCard({super.key, required this.contest});
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -86,11 +119,11 @@ class ContestCard extends StatelessWidget {
         leading: Image.network(
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcpKizuouJPQa9RG-WfkaXejSVPrvvso57dA&s"),
         title: Text(
-          contest.name,
+          contest.Contest_id.toString(),
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
         ),
         subtitle: Text(
-          DateFormat('MMMM d, yyyy').format(contest.date),
+          DateFormat('MMMM d, yyyy').format(contest.start.toDate()),
           style: TextStyle(color: Colors.grey[600], fontSize: 10),
         ),
         trailing: Container(
@@ -109,37 +142,3 @@ class ContestCard extends StatelessWidget {
     );
   }
 }
-
-class Contest {
-  final String name;
-  final DateTime date;
-
-  Contest({required this.name, required this.date});
-}
-
-List<Contest> pastContests = [
-  Contest(name: 'Weekly Contest 292', date: DateTime(2022, 5, 8)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Weekly Contest 292', date: DateTime(2022, 5, 8)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Weekly Contest 292', date: DateTime(2022, 5, 8)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Weekly Contest 292', date: DateTime(2022, 5, 8)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Weekly Contest 292', date: DateTime(2022, 5, 8)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-  Contest(name: 'Weekly Contest 292', date: DateTime(2022, 5, 8)),
-  Contest(name: 'Biweekly Contest 78', date: DateTime(2022, 5, 14)),
-  Contest(name: 'Weekly Contest 293', date: DateTime(2022, 5, 15)),
-];

@@ -35,10 +35,7 @@ class _LeetCodeProblemsetHomescreenState
   List<Widget> buildProblemScreen() {
     return [
       SliverToBoxAdapter(child: AdsAndCalender(size: widget.size)),
-      SliverToBoxAdapter(
-          child: ProblemsetMenu(
-        size: widget.size,
-      )),
+      SliverToBoxAdapter(child: ProblemsetMenu(size: widget.size)),
     ];
   }
 

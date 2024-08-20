@@ -11,7 +11,6 @@ class ProblemsetMenu extends StatefulWidget {
   const ProblemsetMenu({required this.size, super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _ProblemsetMenuState createState() => _ProblemsetMenuState();
 }
 
