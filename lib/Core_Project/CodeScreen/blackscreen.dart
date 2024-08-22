@@ -76,6 +76,12 @@ class _BlackScreenState extends State<BlackScreen> {
       initAgora();
     }
     _initializeChatsStream();
+    _initializeAudioPlayer();
+  }
+
+  void _initializeAudioPlayer() async {
+    await _audioPlayer.setSource(AssetSource('audio/mp.mp3'));
+    await _audioPlayer.setReleaseMode(ReleaseMode.release);
   }
 
   void _initializeChatsStream() {
@@ -86,11 +92,20 @@ class _BlackScreenState extends State<BlackScreen> {
         .orderBy('timestamp', descending: false)
         .snapshots();
     _chatsStream.listen((snapshot) {
+      if (_chatDocs.length < snapshot.docs.length && _chatDocs.isNotEmpty) {
+        // New message received, play sound
+        _playMessageSound();
+      }
       setState(() {
         _chatDocs = snapshot.docs;
         _isLoading = false;
       });
     });
+  }
+
+  void _playMessageSound() async {
+    await _audioPlayer.stop();
+    await _audioPlayer.resume();
   }
 
   Future<void> _sendMessage() async {
@@ -184,12 +199,12 @@ class _BlackScreenState extends State<BlackScreen> {
     }
   }
 
-//
   @override
   void dispose() {
     if (_engine != null) {
       _dispose();
     }
+    _audioPlayer.dispose();
     super.dispose();
   }
 
