@@ -386,6 +386,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 10),
             TextField(
+              controller: _teamNameController,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: "Enter the team ID to join",
@@ -413,9 +414,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Joined the Team Successfully')),
-              );
+              if (_teamNameController.text.isNotEmpty) {
+                sendToBlackScreen(context);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.pink[300],
@@ -455,6 +456,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 10),
             TextField(
+              controller: _teamNameController,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: "Enter the team name",
@@ -481,13 +483,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => BlackScreen(
-                      teamid: "abhishek",
-                      isOnline: true,
-                      problem: widget.problem,
-                      size: MediaQuery.sizeOf(context))));
+              if (_teamNameController.text.isNotEmpty) {
+                sendToBlackScreen(context);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.pink[300],
@@ -497,6 +495,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ],
       ),
     );
+  }
+
+  void sendToBlackScreen(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => BlackScreen(
+            teamid: _teamNameController.text,
+            isOnline: true,
+            problem: widget.problem,
+            size: MediaQuery.sizeOf(context))));
   }
 
   void _registerAsSinglePlayer() {
