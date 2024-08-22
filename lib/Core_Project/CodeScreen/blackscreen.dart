@@ -80,7 +80,7 @@ class _BlackScreenState extends State<BlackScreen> {
   }
 
   void _initializeAudioPlayer() async {
-    await _audioPlayer.setSource(AssetSource('audio/mp.mp3'));
+    await _audioPlayer.setSource(AssetSource('sounds/mp.mp3'));
     await _audioPlayer.setReleaseMode(ReleaseMode.release);
   }
 
