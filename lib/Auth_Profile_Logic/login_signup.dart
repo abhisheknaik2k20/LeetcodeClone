@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:leetcodeclone/Core_Project/Problemset/containers/homescreen.dart';
 import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
 import 'package:leetcodeclone/Auth_Profile_Logic/VerifyMail/verifyMail.dart';
@@ -102,15 +101,7 @@ Future<UserCredential?> signInWithGoogle(BuildContext context) async {
 }
 
 Future<UserCredential?> gitHubSignIn(BuildContext context) async {
-  String? clientId;
-  String? clientSecret;
-
   try {
-    clientId = dotenv.env["clientId"];
-    clientSecret = dotenv.env["client_secret"];
-    if (clientId == null || clientSecret == null) {
-      throw Exception("One or more required environment variables are missing");
-    }
     final githubAuthProvider = GithubAuthProvider();
     githubAuthProvider.addScope('read:user');
     githubAuthProvider.addScope('user:email');

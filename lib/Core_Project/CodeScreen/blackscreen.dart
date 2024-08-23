@@ -2,17 +2,15 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_code_editor/flutter_code_editor.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/texteditor.dart';
 import 'package:leetcodeclone/Core_Project/CodeScreen/dragcontain.dart';
 import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:segmented_button_slide/segmented_button_slide.dart';
 
-const appId = "5bb85a5b825748f4bed9404574298f27";
+const appId = "04d6ec6fe978494aaa37d897dedbd1e3";
 const token =
-    "007eJxTYDj+3HNpkMGlh+yVUq+nTmCKe2TPlG3keruNfYqkucIZjy4FBtOkJAvTRNMkCyNTcxOLNJOk1BRLEwMTIMfI0iLNyLx/5bG0hkBGhmSnBkZGBggE8TkYEpMyMoszUrMZGABFcx7s";
+    "007eJxTYDCedXf1Vd899Qdblwb4XWwtD5Fr1U3lapE+sTd8t83OQ58VGAxMUsxSk83SUi3NLUwsTRITE43NUywszVNSU5JSDFONw+adSGsIZGSY3c3MyMgAgSA+B0NiUkZmcUZqNgMDADjQIlw=";
 const channel = "abhishek";
 
 class BlackScreen extends StatefulWidget {
@@ -226,12 +224,12 @@ class _BlackScreenState extends State<BlackScreen> {
       color: Colors.grey[900],
       child: Column(
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SizedBox(
             width: 250,
             height: 60,
             child: SegmentedButtonSlide(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
               entries: const [
                 SegmentedButtonSlideEntry(
                   icon: Icons.voice_chat,
@@ -408,15 +406,15 @@ class _BlackScreenState extends State<BlackScreen> {
             iconSize: 24,
             style: ButtonStyle(
               backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.pink[400]!),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  WidgetStateProperty.all<Color>(Colors.pink[400]!),
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   side: BorderSide(width: 2, color: Colors.grey[300]!),
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-              minimumSize: MaterialStateProperty.all<Size>(const Size(60, 60)),
+              padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
+              minimumSize: WidgetStateProperty.all<Size>(const Size(60, 60)),
               alignment: Alignment.center,
             ),
           )
@@ -429,7 +427,7 @@ class _BlackScreenState extends State<BlackScreen> {
     return Align(
       alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         constraints: BoxConstraints(maxWidth: widget.size.width * 0.75),
         decoration: BoxDecoration(
           color: isCurrentUser ? Colors.pink[100] : Colors.grey[300],
@@ -438,7 +436,7 @@ class _BlackScreenState extends State<BlackScreen> {
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               blurRadius: 3,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -450,13 +448,13 @@ class _BlackScreenState extends State<BlackScreen> {
               // Add functionality when tapping on a message
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     chat["message"],
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black87,
                     ),
@@ -548,8 +546,8 @@ class _BlackScreenState extends State<BlackScreen> {
           widget.isOnline && _isAgoraInitialized && selected == 0
               ? FloatingActionButton(
                   onPressed: _toggleAudio,
-                  child: Icon(_isAudioOn ? Icons.mic : Icons.mic_off),
                   backgroundColor: Colors.pink[400],
+                  child: Icon(_isAudioOn ? Icons.mic : Icons.mic_off),
                 )
               : null,
     );
@@ -618,7 +616,7 @@ class _BlackScreenState extends State<BlackScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.chat_bubble_outline, size: 48, color: Colors.grey[400]),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
             "Start chatting",
             style: TextStyle(
@@ -627,7 +625,7 @@ class _BlackScreenState extends State<BlackScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             "Send a message to begin the conversation",
             style: TextStyle(

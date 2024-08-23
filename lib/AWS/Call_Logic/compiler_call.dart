@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
 
@@ -9,7 +8,8 @@ Future<Map<String, dynamic>> callCompiler(
   showCircularbar(context);
   try {
     final response = await http.post(
-      Uri.parse(dotenv.env['API']!),
+      Uri.parse(
+          "https://uzyfh01rfj.execute-api.us-east-1.amazonaws.com/production"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -46,8 +46,9 @@ Future<Map<String, dynamic>> invokeLambdaFunction({
   required List<String> journey,
 }) async {
   try {
-    final url = dotenv.env['recommender'];
-    if (url == null || url.isEmpty) {
+    const url =
+        "https://23y7o6o923.execute-api.us-east-1.amazonaws.com/production";
+    if (url.isEmpty) {
       throw Exception('Recommender URL is not set in environment variables');
     }
 
