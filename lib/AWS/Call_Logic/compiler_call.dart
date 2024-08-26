@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
+import 'package:competitivecodingarena/Snackbars&Pbars/snackbars.dart';
 
 Future<Map<String, dynamic>> callCompiler(
     BuildContext context, String language, String code) async {

@@ -1,4 +1,4 @@
-name: leetcodeclone
+name: competitivecodingarena
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -61,6 +61,9 @@ dependencies:
   permission_handler: ^11.3.1
   audioplayers: ^6.0.0
   segmented_button_slide: ^2.0.0
+  animated_switcher: ^1.0.1
+  shimmer: ^3.0.0
+  flutter_earth_globe: ^1.0.4
   
 dev_dependencies:
   flutter_test:
@@ -97,8 +100,7 @@ flutter:
   - assets/images/trophy.png
   - assets/images/settings.png
   - assets/images/help.png 
-  - assets/sounds/mp.mp3 
-  - assets/.env
+  - assets/sounds/mp.mp3
    # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

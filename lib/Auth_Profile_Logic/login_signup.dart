@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/containers/homescreen.dart';
-import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
-import 'package:leetcodeclone/Auth_Profile_Logic/VerifyMail/verifyMail.dart';
-import 'package:leetcodeclone/Welcome/welcome.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/containers/homescreen.dart';
+import 'package:competitivecodingarena/Snackbars&Pbars/snackbars.dart';
+import 'package:competitivecodingarena/Auth_Profile_Logic/VerifyMail/verifyMail.dart';
+import 'package:competitivecodingarena/Welcome/welcome.dart';
 
 void loginLogic(
   BuildContext context,

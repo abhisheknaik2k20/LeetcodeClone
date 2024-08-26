@@ -1,47 +1,55 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/ImageScr/homeScreen.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/containers/problemset.dart';
+import 'package:competitivecodingarena/ImageScr/homeScreen.dart';
 import '../styles/styles.dart';
 
-class AdsAndCalender extends StatefulWidget {
+class AdsAndCalenderAndProblems extends StatefulWidget {
   final Size size;
-  const AdsAndCalender({required this.size, super.key});
+  const AdsAndCalenderAndProblems({required this.size, super.key});
 
   @override
-  State<AdsAndCalender> createState() => _AdsAndCalenderState();
+  State<AdsAndCalenderAndProblems> createState() =>
+      _AdsAndCalenderAndProblemsState();
 }
 
-class _AdsAndCalenderState extends State<AdsAndCalender> {
+class _AdsAndCalenderAndProblemsState extends State<AdsAndCalenderAndProblems> {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        SizedBox(width: widget.size.width * 0.13),
-        SizedBox(
-          width: widget.size.width * 0.5,
-          height: 470,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildImageRow(
-                  widget.size.width * 0.15, widget.size.height * 0.17, imagscr),
-              const SizedBox(height: 25),
-              const Text("Study Plan", style: titleTextStyle),
-              const SizedBox(height: 5),
-              _buildInfoRow(widget.size.width * 0.15, widget.size.height * 0.13,
-                  imagscr2, text1),
-              const SizedBox(height: 10),
-              _buildInfoRow(widget.size.width * 0.15, widget.size.height * 0.13,
-                  imgscr3, text2),
-              const SizedBox(height: 20),
-              const Text("Topics to Explore", style: TextStyle(fontSize: 15)),
-              const SizedBox(height: 5),
-              _buildTopicsRow(widget.size.width * 0.49),
-            ],
-          ),
+        Row(
+          children: [
+            SizedBox(width: widget.size.width * 0.13),
+            SizedBox(
+              width: widget.size.width * 0.5,
+              height: 470,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImageRow(widget.size.width * 0.15,
+                      widget.size.height * 0.17, imagscr),
+                  const SizedBox(height: 25),
+                  const Text("Study Plan", style: titleTextStyle),
+                  const SizedBox(height: 5),
+                  _buildInfoRow(widget.size.width * 0.15,
+                      widget.size.height * 0.13, imagscr2, text1),
+                  const SizedBox(height: 10),
+                  _buildInfoRow(widget.size.width * 0.15,
+                      widget.size.height * 0.13, imgscr3, text2),
+                  const SizedBox(height: 20),
+                  const Text("Topics to Explore",
+                      style: TextStyle(fontSize: 15)),
+                  const SizedBox(height: 5),
+                  _buildTopicsRow(widget.size.width * 0.49),
+                ],
+              ),
+            ),
+            _buildCalendarColumn(widget.size.width * 0.2, 470),
+            SizedBox(width: widget.size.width * 0.1),
+          ],
         ),
-        _buildCalendarColumn(widget.size.width * 0.2, 470),
-        SizedBox(width: widget.size.width * 0.1),
+        ProblemsetMenu(size: widget.size),
       ],
     );
   }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/Contest/banner.dart';
-import 'package:leetcodeclone/Core_Project/Contest/featured.dart';
-import 'package:leetcodeclone/Core_Project/Contest/roadmap.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/containers/ads_cal.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/containers/appbar.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/containers/problemset.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/banner.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/roadmap.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/containers/ads_cal.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/containers/appbar.dart';
 
 class LeetCodeProblemsetHomescreen extends StatefulWidget {
   final Size size;
@@ -32,13 +30,6 @@ class _LeetCodeProblemsetHomescreenState
     ];
   }
 
-  List<Widget> buildProblemScreen() {
-    return [
-      SliverToBoxAdapter(child: AdsAndCalender(size: widget.size)),
-      SliverToBoxAdapter(child: ProblemsetMenu(size: widget.size)),
-    ];
-  }
-
   setItem(String item) {
     setState(() {
       selectedItem = item;
@@ -50,20 +41,63 @@ class _LeetCodeProblemsetHomescreenState
     super.initState();
   }
 
+  Widget _buildCurrentScreen() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 400),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+            ),
+          ),
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.05, 0.0),
+              end: Offset.zero,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutCubic,
+              ),
+            ),
+            child: child,
+          ),
+        );
+      },
+      layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+        return Stack(
+          children: <Widget>[
+            ...previousChildren,
+            if (currentChild != null) currentChild,
+          ],
+        );
+      },
+      child: _getCurrentScreen(),
+    );
+  }
+
+  Widget _getCurrentScreen() {
+    switch (selectedItem) {
+      case 'Problems':
+        return AdsAndCalenderAndProblems(size: widget.size);
+      case 'Contest':
+        return ScreenBannerAndFeatured(size: widget.size);
+      default:
+        return const DSARoadmapScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           ...buildHeader(),
-          ...switch (selectedItem) {
-            'Problems' => buildProblemScreen(),
-            'Contest' => [
-                ScreenBanner(size: widget.size),
-                FeaturedContest(size: widget.size)
-              ],
-            _ => [const DSARoadmapScreen()]
-          },
+          SliverToBoxAdapter(
+            child: _buildCurrentScreen(),
+          ),
         ],
       ),
     );

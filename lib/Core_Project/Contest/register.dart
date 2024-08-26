@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/blackscreen.dart';
-import 'package:leetcodeclone/Core_Project/Contest/contestclass.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/blackscreen.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/contestclass.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Contest contest;
@@ -111,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              "LeetCode Weekly ${widget.contest.Contest_id}",
+              "Competitive Coding Weekly ${widget.contest.Contest_id}",
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

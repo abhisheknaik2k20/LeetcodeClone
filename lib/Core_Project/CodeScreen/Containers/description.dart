@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/exampleprobs.dart';
 
 RichText problemToRichText(Problem problem) {
   List<TextSpan> textSpans = [];

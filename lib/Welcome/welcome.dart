@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Welcome/widgets/big_widgets.dart';
+import 'package:competitivecodingarena/Welcome/widgets/big_widgets.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -56,7 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 buildAppBar(context, MediaQuery.of(context).size),
                 buildIntroSection(_controller1),
                 buildExploreSection(_controller2),
-                buildWhyleetcodecloneSection(),
+                buildWhycompetitivecodingarenaSection(),
                 buildCompaniesSection(),
               ],
             ),

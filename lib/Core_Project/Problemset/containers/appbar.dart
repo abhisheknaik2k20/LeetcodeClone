@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Auth_Profile_Logic/login_signup.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/styles/styles.dart';
-import 'package:leetcodeclone/Auth_Profile_Logic/Profile/ProfilePage.dart';
+import 'package:competitivecodingarena/Auth_Profile_Logic/login_signup.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/styles/styles.dart';
+import 'package:competitivecodingarena/Auth_Profile_Logic/Profile/ProfilePage.dart';
 
 class HomeAppBar extends StatefulWidget {
   final Function(String) setItem;

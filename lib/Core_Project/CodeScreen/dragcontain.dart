@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/console.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/description.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/submission.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/testcase.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/Containers/texteditor.dart';
-import 'package:leetcodeclone/Core_Project/Contest/OnlineEditor.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/console.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/description.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/submission.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/testcase.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/texteditor.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/OnlineEditor.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/exampleprobs.dart';
 
 class DraggableResizableContainer extends StatefulWidget {
   final String? teamid;

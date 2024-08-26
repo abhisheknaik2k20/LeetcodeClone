@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.3.2"
+  animated_switcher:
+    dependency: "direct main"
+    description:
+      name: animated_switcher
+      sha256: "242dc53af71c4ea44fe7c33a7bef2f7439d58cce5a4cca20af8b1da3e7bac6e8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   ansicolor:
     dependency: transitive
     description:
@@ -390,6 +398,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
+  flutter_earth_globe:
+    dependency: "direct main"
+    description:
+      name: flutter_earth_globe
+      sha256: "83dfec30d34838ff8c201d58ad1a84f99877f5bcf2e82bbe1e91feb97b58e28d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   flutter_highlight:
     dependency: "direct main"
     description:
@@ -824,6 +840,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      sha256: "5f88c883a22e9f9f299e5ba0e4f7e6054857224976a5d9f839d4ebdc94a14ac9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

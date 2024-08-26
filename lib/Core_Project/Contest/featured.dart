@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/Contest/contestclass.dart';
-import 'package:leetcodeclone/Core_Project/Contest/leaderboard.dart';
-import 'package:leetcodeclone/Core_Project/Contest/prev_contest.dart';
-import 'package:leetcodeclone/Core_Project/Contest/register.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
-import 'package:leetcodeclone/ImageScr/contestscreen.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/contestclass.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/leaderboard.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/prev_contest.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/register.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:competitivecodingarena/ImageScr/contestscreen.dart';
 
 class FeaturedContest extends StatefulWidget {
   final Size size;
@@ -44,26 +44,24 @@ class _FeaturedContestState extends State<FeaturedContest> {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Center(
-        child: SizedBox(
-          width: widget.size.width * 0.5,
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 30),
-                const Text(
-                  "Featured Content",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                _buildFeaturedContests(context),
-                const SizedBox(height: 40),
-                _buildPastContestsAndRanking(),
-              ],
-            ),
+    return Center(
+      child: SizedBox(
+        width: widget.size.width * 0.5,
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 30),
+              const Text(
+                "Featured Content",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              _buildFeaturedContests(context),
+              const SizedBox(height: 40),
+              _buildPastContestsAndRanking(),
+            ],
           ),
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/comapnies.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/comapnies.dart';
 
 class Companies extends StatefulWidget {
   const Companies({super.key});

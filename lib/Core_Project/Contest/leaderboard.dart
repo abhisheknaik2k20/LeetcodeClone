@@ -14,13 +14,14 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  ScrollController scrollController = ScrollController();
+  late ScrollController scrollController;
   double counter = 0.0;
   late Timer _timer;
 
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     _startTimer();
   }
 

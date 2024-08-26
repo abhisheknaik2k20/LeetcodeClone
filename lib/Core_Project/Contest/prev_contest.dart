@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:leetcodeclone/Core_Project/Contest/contestclass.dart';
+import 'package:competitivecodingarena/Core_Project/Contest/contestclass.dart';
 
 class PastContestsMenu extends StatefulWidget {
   final Size size;
@@ -13,7 +13,7 @@ class PastContestsMenu extends StatefulWidget {
 
 class _PastContestsMenuState extends State<PastContestsMenu> {
   int selectednum = 1;
-  final sc = ScrollController();
+  late ScrollController sc;
   // ignore: unused_field
   bool _isLoading = true;
 
@@ -29,6 +29,7 @@ class _PastContestsMenuState extends State<PastContestsMenu> {
   @override
   void initState() {
     super.initState();
+    sc = ScrollController();
     generateList();
   }
 
@@ -44,6 +45,12 @@ class _PastContestsMenuState extends State<PastContestsMenu> {
         _isLoading = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    sc.dispose();
   }
 
   @override

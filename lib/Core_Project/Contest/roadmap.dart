@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Welcome/recommender/recommender.dart';
+import 'package:competitivecodingarena/Welcome/recommender/recommender.dart';
 
 class DSARoadmapScreen extends StatefulWidget {
   const DSARoadmapScreen({super.key});
@@ -112,127 +112,125 @@ class _DSARoadmapScreenState extends State<DSARoadmapScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: FutureBuilder(
-        future: _dataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return haveRoadMap
-                ? SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.85,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        nodePositions.clear();
-                        _calculatePositions(1, 0, constraints.maxWidth * 0.1,
-                            constraints.maxWidth * 0.9, constraints.maxHeight);
-                        return Stack(
-                          children: [
-                            CustomPaint(
-                              size: Size(
-                                  constraints.maxWidth, constraints.maxHeight),
-                              painter:
-                                  HierarchicalTreePainter(steps, nodePositions),
-                            ),
-                            ...steps.map((step) {
-                              final position = nodePositions[step.number]!;
-                              return AnimatedPositioned(
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInOut,
-                                left: position.dx - 40,
-                                top: position.dy - 40,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      step.currentColor =
-                                          step.currentColor.withOpacity(0.7);
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('Tapped on ${step.title}')),
-                                    );
-                                  },
-                                  child: NodeWidget(step: step),
-                                ),
-                              );
-                            }),
-                          ],
-                        );
-                      },
-                    ),
-                  )
-                : SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.85,
-                    child: Center(
-                      child: Card(
-                        elevation: 10,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.map_outlined,
-                                  size: 80, color: Colors.pink),
-                              const SizedBox(height: 20),
-                              const Text(
-                                "Create Your Coding Road-Map",
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                "Embark on your coding journey with a personalized LeetCode RoadMap",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.grey[600]),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 30),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PreferencesScreen(),
-                                    ),
-                                  )
-                                      .then((result) {
-                                    if (result == true) {
-                                      setState(() {
-                                        _dataFuture = _loadData();
-                                      });
-                                    }
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.pink,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 30, vertical: 15),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                                child: const Text("Create Roadmap",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                            ],
+    return FutureBuilder(
+      future: _dataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return haveRoadMap
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      nodePositions.clear();
+                      _calculatePositions(1, 0, constraints.maxWidth * 0.1,
+                          constraints.maxWidth * 0.9, constraints.maxHeight);
+                      return Stack(
+                        children: [
+                          CustomPaint(
+                            size: Size(
+                                constraints.maxWidth, constraints.maxHeight),
+                            painter:
+                                HierarchicalTreePainter(steps, nodePositions),
                           ),
+                          ...steps.map((step) {
+                            final position = nodePositions[step.number]!;
+                            return AnimatedPositioned(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                              left: position.dx - 40,
+                              top: position.dy - 40,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    step.currentColor =
+                                        step.currentColor.withOpacity(0.7);
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text('Tapped on ${step.title}')),
+                                  );
+                                },
+                                child: NodeWidget(step: step),
+                              ),
+                            );
+                          }),
+                        ],
+                      );
+                    },
+                  ),
+                )
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  child: Center(
+                    child: Card(
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.map_outlined,
+                                size: 80, color: Colors.pink),
+                            const SizedBox(height: 20),
+                            const Text(
+                              "Create Your Coding Road-Map",
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "Embark on your coding journey with a personalized LeetCode RoadMap",
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.grey[600]),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 30),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PreferencesScreen(),
+                                  ),
+                                )
+                                    .then((result) {
+                                  if (result == true) {
+                                    setState(() {
+                                      _dataFuture = _loadData();
+                                    });
+                                  }
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.pink,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              child: const Text("Create Roadmap",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  );
-          }
-        },
-      ),
+                  ),
+                );
+        }
+      },
     );
   }
 

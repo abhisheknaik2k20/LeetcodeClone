@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Welcome/styles/styles.dart';
+import 'package:competitivecodingarena/Welcome/styles/styles.dart';
 
 Widget buildLogo() {
   return Container(

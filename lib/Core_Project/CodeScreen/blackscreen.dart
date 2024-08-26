@@ -2,8 +2,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/dragcontain.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/dragcontain.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/exampleprobs.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:segmented_button_slide/segmented_button_slide.dart';
@@ -48,11 +48,11 @@ class _BlackScreenState extends State<BlackScreen> {
     {'name': 'TestCases', 'icon': Icons.check_box, 'color': Colors.green},
     {'name': 'Console', 'icon': Icons.check_box, 'color': Colors.indigo},
   ];
-  final Set<int> _remoteUids = {};
-  final tc = TextEditingController();
-  final sc = ScrollController();
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  final _authUser = FirebaseAuth.instance.currentUser!.displayName;
+  Set<int>? _remoteUids;
+  TextEditingController? tc;
+  ScrollController? sc;
+  AudioPlayer? _audioPlayer;
+  String? _authUser;
   // ignore: unused_field
   bool _localUserJoined = false;
   RtcEngine? _engine;
@@ -60,16 +60,27 @@ class _BlackScreenState extends State<BlackScreen> {
   bool _isLoading = true;
   bool _isAgoraInitialized = true;
   bool _isAudioOn = true;
-  final Map<int, bool> _speakingUsers = {};
-  final Map<int, String> _userNames = {};
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  late Stream<QuerySnapshot> _chatsStream;
+  Map<int, bool>? _speakingUsers;
+  Map<int, String>? _userNames;
+  FirebaseFirestore? _firestore;
+  Stream<QuerySnapshot>? _chatsStream;
   int selected = 0;
 
   @override
   void initState() {
     super.initState();
-    _dispose();
+
+    // Initialize class fields
+    _remoteUids = {};
+    tc = TextEditingController();
+    sc = ScrollController();
+    _audioPlayer = AudioPlayer();
+    _authUser = FirebaseAuth.instance.currentUser?.displayName ?? 'Guest';
+    _speakingUsers = {};
+    _userNames = {};
+    _firestore = FirebaseFirestore.instance;
+
+    // Initialize methods
     if (widget.isOnline) {
       initAgora();
     }
@@ -78,18 +89,18 @@ class _BlackScreenState extends State<BlackScreen> {
   }
 
   void _initializeAudioPlayer() async {
-    await _audioPlayer.setSource(AssetSource('sounds/mp.mp3'));
-    await _audioPlayer.setReleaseMode(ReleaseMode.release);
+    await _audioPlayer?.setSource(AssetSource('sounds/mp.mp3'));
+    await _audioPlayer?.setReleaseMode(ReleaseMode.release);
   }
 
   void _initializeChatsStream() {
     _chatsStream = _firestore
-        .collection('code')
+        ?.collection('code')
         .doc(widget.teamid)
         .collection('chats')
         .orderBy('timestamp', descending: false)
         .snapshots();
-    _chatsStream.listen((snapshot) {
+    _chatsStream?.listen((snapshot) {
       if (_chatDocs.length < snapshot.docs.length && _chatDocs.isNotEmpty) {
         // New message received, play sound
         _playMessageSound();
@@ -102,21 +113,21 @@ class _BlackScreenState extends State<BlackScreen> {
   }
 
   void _playMessageSound() async {
-    await _audioPlayer.stop();
-    await _audioPlayer.resume();
+    await _audioPlayer?.stop();
+    await _audioPlayer?.resume();
   }
 
   Future<void> _sendMessage() async {
-    if (tc.text.isNotEmpty) {
+    if (tc!.text.isNotEmpty) {
       final message = {
         "sender": _authUser,
-        "message": tc.text,
+        "message": tc?.text,
         "timestamp": FieldValue.serverTimestamp(),
       };
-      tc.clear();
+      tc?.clear();
       try {
         await _firestore
-            .collection('code')
+            ?.collection('code')
             .doc(widget.teamid)
             .collection('chats')
             .add(message);
@@ -140,24 +151,24 @@ class _BlackScreenState extends State<BlackScreen> {
             debugPrint("local user ${connection.localUid} joined");
             setState(() {
               _localUserJoined = true;
-              _userNames[0] = "You";
+              _userNames?[0] = "You";
             });
           },
           onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
             debugPrint("remote user $remoteUid joined");
             setState(() {
-              _remoteUids.add(remoteUid);
-              _userNames[remoteUid] = "User $remoteUid";
-              _speakingUsers[remoteUid] = false;
+              _remoteUids?.add(remoteUid);
+              _userNames?[remoteUid] = "User $remoteUid";
+              _speakingUsers?[remoteUid] = false;
             });
           },
           onUserOffline: (RtcConnection connection, int remoteUid,
               UserOfflineReasonType reason) {
             debugPrint("remote user $remoteUid left channel");
             setState(() {
-              _remoteUids.remove(remoteUid);
-              _userNames.remove(remoteUid);
-              _speakingUsers.remove(remoteUid);
+              _remoteUids?.remove(remoteUid);
+              _userNames?.remove(remoteUid);
+              _speakingUsers?.remove(remoteUid);
             });
           },
           onAudioVolumeIndication:
@@ -165,9 +176,9 @@ class _BlackScreenState extends State<BlackScreen> {
             setState(() {
               for (var speaker in speakers) {
                 if (speaker.volume! > 5) {
-                  _speakingUsers[speaker.uid!] = true;
+                  _speakingUsers?[speaker.uid!] = true;
                 } else {
-                  _speakingUsers[speaker.uid!] = false;
+                  _speakingUsers?[speaker.uid!] = false;
                 }
               }
             });
@@ -202,7 +213,7 @@ class _BlackScreenState extends State<BlackScreen> {
     if (_engine != null) {
       _dispose();
     }
-    _audioPlayer.dispose();
+    _audioPlayer?.dispose();
     super.dispose();
   }
 
@@ -263,8 +274,8 @@ class _BlackScreenState extends State<BlackScreen> {
     return ListView(
       children: [
         _buildUserTile(0, "You"),
-        ..._remoteUids
-            .map((uid) => _buildUserTile(uid, _userNames[uid] ?? "User $uid")),
+        ..._remoteUids!
+            .map((uid) => _buildUserTile(uid, _userNames?[uid] ?? "User $uid")),
       ],
     );
   }
@@ -277,8 +288,7 @@ class _BlackScreenState extends State<BlackScreen> {
   }
 
   Widget _buildUserTile(int uid, String name) {
-    bool isSpeaking = _speakingUsers[uid] ?? false;
-
+    bool isSpeaking = _speakingUsers?[uid] ?? false;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,

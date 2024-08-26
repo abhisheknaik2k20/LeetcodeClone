@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/AWS/Call_Logic/compiler_call.dart';
-import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
-import 'package:leetcodeclone/Welcome/recommender/options.dart';
+import 'package:competitivecodingarena/AWS/Call_Logic/compiler_call.dart';
+import 'package:competitivecodingarena/Snackbars&Pbars/snackbars.dart';
+import 'package:competitivecodingarena/Welcome/recommender/options.dart';
 
 class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});

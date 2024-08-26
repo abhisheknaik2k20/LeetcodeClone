@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Auth_Profile_Logic/login.dart';
-import 'package:leetcodeclone/Welcome/styles/styles.dart';
-import 'package:leetcodeclone/Welcome/widgets/small_widgets.dart';
+import 'package:competitivecodingarena/Auth_Profile_Logic/login.dart';
+import 'package:competitivecodingarena/Welcome/styles/styles.dart';
+import 'package:competitivecodingarena/Welcome/widgets/small_widgets.dart';
 import 'dart:math' as math;
-
 
 Widget buildAppBar(BuildContext context, Size size) {
   List<String> options = ['Explore', 'Product', 'Developer', 'Login'];
@@ -24,11 +23,11 @@ Widget buildAppBar(BuildContext context, Size size) {
           ),
           const SizedBox(width: 10),
           const Text(
-            'LeetCode',
+            'Competitive Coding Arena',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 18,
             ),
           ),
         ],
@@ -82,7 +81,7 @@ Widget buildIntroSection(AnimationController controller1) {
             _buildAnimatedImage(controller1, 'assets/images/data.png', 350),
             buildInfoContainer(
               'A New Way to Learn',
-              'leetcodeclone is the best platform to help you enhance your skills, expand your knowledge and prepare for technical interviews.',
+              'Competitive Coding Arena is the best platform to help you enhance your skills, expand your knowledge, and prepare for technical interviews.',
               'Get Started',
             ),
           ],
@@ -102,7 +101,7 @@ Widget buildExploreSection(AnimationController controller2) {
           children: [
             buildInfoContainer(
               'Start Exploring',
-              'Explore is a well-organized tool that helps you get the most out of leetcodeclone by providing structure to guide your progress towards the next step in your programming career.',
+              'Explore is a well-organized tool that helps you get the most out of Competitive Coding Arena by providing structure to guide your progress towards the next step in your programming career.',
               'Explore Courses',
               icon: Icons.school,
             ),
@@ -114,11 +113,11 @@ Widget buildExploreSection(AnimationController controller2) {
   );
 }
 
-Widget buildWhyleetcodecloneSection() {
+Widget buildWhycompetitivecodingarenaSection() {
   return SliverToBoxAdapter(
     child: Center(
       child: buildSectionContainer(
-        'Why leetcodeclone?',
+        'Why Competitive Coding Arena?',
         Column(
           children: [
             const SizedBox(height: 30),
@@ -158,11 +157,11 @@ Widget buildCompaniesSection() {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 100.0),
         child: buildSectionContainer(
-          'leetcodeclone for Companies',
+          'Competitive Coding Arena for Companies',
           Column(
             children: [
               Text(
-                'Streamline your technical hiring process with leetcodeclone\'s powerful tools.',
+                'Streamline your technical hiring process with Competitive Coding Arena\'s powerful tools.',
                 style: sectionDescriptionTextStyle,
               ),
               const SizedBox(height: 30),

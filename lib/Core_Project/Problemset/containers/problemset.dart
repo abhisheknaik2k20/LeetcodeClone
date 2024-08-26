@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/CodeScreen/blackscreen.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/containers/companies.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/exampleprobs.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/containers/stats.dart';
-import 'package:leetcodeclone/Snackbars&Pbars/snackbars.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/blackscreen.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/containers/companies.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/exampleprobs.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/containers/stats.dart';
+import 'package:competitivecodingarena/Snackbars&Pbars/snackbars.dart';
 
 class ProblemsetMenu extends StatefulWidget {
   final Size size;
@@ -14,18 +14,24 @@ class ProblemsetMenu extends StatefulWidget {
   _ProblemsetMenuState createState() => _ProblemsetMenuState();
 }
 
-class _ProblemsetMenuState extends State<ProblemsetMenu> {
+class _ProblemsetMenuState extends State<ProblemsetMenu>
+    with SingleTickerProviderStateMixin {
   List<Problem> problems = [];
   List<Problem> filteredProblems = [];
   String searchQuery = "";
   String difficultyFilter = "All";
   String statusFilter = "All";
   String frequencyFilter = "All";
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     fetchProblemsFromFirestore();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..forward();
   }
 
   Future<void> fetchProblemsFromFirestore() async {
@@ -39,6 +45,7 @@ class _ProblemsetMenuState extends State<ProblemsetMenu> {
           querySnapshot.docs.map((doc) => Problem.fromFirestore(doc)).toList();
       setState(() {
         filteredProblems = problems;
+        _animationController.forward(from: 0.0);
       });
     } on FirebaseException catch (e) {
       showSnackBar(context, e.code);
@@ -62,6 +69,12 @@ class _ProblemsetMenuState extends State<ProblemsetMenu> {
             matchesFrequency;
       }).toList();
     });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -177,55 +190,72 @@ class _ProblemsetMenuState extends State<ProblemsetMenu> {
                   itemCount: filteredProblems.length,
                   itemBuilder: (context, index) {
                     Problem problem = filteredProblems[index];
-                    return ListTile(
-                      minTileHeight: 20,
-                      tileColor: index % 2 != 0
-                          ? Colors.white.withOpacity(0.05)
-                          : Colors.transparent,
-                      title: Text(
-                        problem.title,
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                      subtitle: Text(
-                        "Acceptance: ${problem.acceptanceRate.toStringAsFixed(1)}%",
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                      trailing: Text(
-                        problem.difficulty,
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: problem.difficulty == 'Easy'
-                                ? Colors.teal
-                                : problem.difficulty == 'Medium'
-                                    ? Colors.amber
-                                    : Colors.pink),
-                      ),
-                      leading: Icon(
-                        size: 15,
-                        problem.status == "Solved"
-                            ? Icons.circle
-                            : problem.status == 'Attempted'
-                                ? Icons.circle
-                                : Icons.circle_outlined,
-                        color: problem.status == "Solved"
-                            ? Colors.green
-                            : problem.status == 'Attempted'
-                                ? Colors.amber
-                                : Colors.grey,
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => BlackScreen(
-                              teamid: null,
-                              isOnline: false,
-                              problem: problem,
-                              size: MediaQuery.sizeOf(context),
-                            ),
+                    return AnimatedBuilder(
+                      animation: _animationController,
+                      builder: (context, child) {
+                        final double animationValue = CurvedAnimation(
+                          parent: _animationController,
+                          curve: Curves.easeInOut,
+                        ).value;
+
+                        return Transform.translate(
+                          offset: Offset(0, 50 * (1 - animationValue)),
+                          child: Opacity(
+                            opacity: animationValue,
+                            child: child,
                           ),
                         );
                       },
+                      child: ListTile(
+                        minVerticalPadding: 10,
+                        tileColor: index % 2 != 0
+                            ? Colors.white.withOpacity(0.05)
+                            : Colors.transparent,
+                        title: Text(
+                          problem.title,
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                        subtitle: Text(
+                          "Acceptance: ${problem.acceptanceRate.toStringAsFixed(1)}%",
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                        trailing: Text(
+                          problem.difficulty,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: problem.difficulty == 'Easy'
+                                  ? Colors.teal
+                                  : problem.difficulty == 'Medium'
+                                      ? Colors.amber
+                                      : Colors.pink),
+                        ),
+                        leading: Icon(
+                          size: 15,
+                          problem.status == "Solved"
+                              ? Icons.circle
+                              : problem.status == 'Attempted'
+                                  ? Icons.circle
+                                  : Icons.circle_outlined,
+                          color: problem.status == "Solved"
+                              ? Colors.green
+                              : problem.status == 'Attempted'
+                                  ? Colors.amber
+                                  : Colors.grey,
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            FadeSlidePageRoute(
+                              page: BlackScreen(
+                                teamid: null,
+                                isOnline: false,
+                                problem: problem,
+                                size: MediaQuery.sizeOf(context),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                 ),
@@ -249,22 +279,57 @@ class _ProblemsetMenuState extends State<ProblemsetMenu> {
 
   Widget buildDropdownFilter(String label, List<String> items,
       String currentValue, void Function(String?) onChanged) {
-    return DropdownButton<String>(
-      value: currentValue,
-      onChanged: onChanged,
-      items: items.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(
-            value,
-            style: const TextStyle(fontSize: 10),
-          ),
-        );
-      }).toList(),
-      hint: Text(
-        label,
-        style: const TextStyle(fontSize: 10),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      child: DropdownButton<String>(
+        value: currentValue,
+        onChanged: onChanged,
+        items: items.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 10),
+            ),
+          );
+        }).toList(),
+        hint: Text(
+          label,
+          style: const TextStyle(fontSize: 10),
+        ),
       ),
     );
   }
+}
+
+class FadeSlidePageRoute<T> extends PageRouteBuilder<T> {
+  final Widget page;
+
+  FadeSlidePageRoute({required this.page})
+      : super(
+          pageBuilder: (context, animation, secondaryAnimation) => page,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var begin = Offset(1.0, 0.0);
+            var end = Offset.zero;
+            var curve = Curves.easeInOutCubic;
+
+            var tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            var offsetAnimation = animation.drive(tween);
+
+            var fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(parent: animation, curve: curve),
+            );
+
+            return FadeTransition(
+              opacity: fadeAnimation,
+              child: SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              ),
+            );
+          },
+          transitionDuration: Duration(milliseconds: 500),
+        );
 }

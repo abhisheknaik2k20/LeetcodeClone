@@ -2,8 +2,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:leetcodeclone/Auth_Profile_Logic/login_signup.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/containers/homescreen.dart';
+import 'package:competitivecodingarena/Auth_Profile_Logic/login_signup.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/containers/homescreen.dart';
 
 typedef ValidatorFunction = String? Function(String?);
 

@@ -1,6 +1,6 @@
 import 'package:easy_pie_chart/easy_pie_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:leetcodeclone/Core_Project/Problemset/examples/comapnies.dart';
+import 'package:competitivecodingarena/Core_Project/Problemset/examples/comapnies.dart';
 
 class PersonalStats extends StatefulWidget {
   const PersonalStats({super.key});
