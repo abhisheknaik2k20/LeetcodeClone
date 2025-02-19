@@ -28,8 +28,7 @@ class PushNotification {
 
   static sendNotification(String token) async {
     final String serverKey = await getAccessToken();
-    String endPointFirebaseCloudMessaging =
-        "https://fcm.googleapis.com/v1/projects/leetcode-94c79/messages:send";
+    String endPointFirebaseCloudMessaging = "";
     final Map<String, dynamic> message = {
       'message': {
         'token': token,
