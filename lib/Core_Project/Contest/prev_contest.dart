@@ -29,21 +29,27 @@ class _PastContestsMenuState extends State<PastContestsMenu> {
   @override
   void initState() {
     super.initState();
-    sc = ScrollController();
-    generateList();
+    if (mounted) {
+      sc = ScrollController();
+      generateList();
+    }
   }
 
   void generateList() async {
     try {
       List<Contest> fetchedContests = await fetchContestsFromFirestore();
-      setState(() {
-        contests = fetchedContests;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          contests = fetchedContests;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -62,13 +68,17 @@ class _PastContestsMenuState extends State<PastContestsMenu> {
         children: [
           SizedBox(
             height: widget.size.height * 0.76,
-            child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: sc,
-              itemCount: contests.length,
-              itemBuilder: (context, index) {
-                return ContestCard(contest: contests[index]);
-              },
+            child: ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: sc,
+                itemCount: contests.length,
+                itemBuilder: (context, index) {
+                  return ContestCard(contest: contests[index]);
+                },
+              ),
             ),
           ),
           SizedBox(

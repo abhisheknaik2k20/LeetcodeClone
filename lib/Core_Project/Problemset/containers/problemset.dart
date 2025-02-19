@@ -11,7 +11,7 @@ class ProblemsetMenu extends StatefulWidget {
   const ProblemsetMenu({required this.size, super.key});
 
   @override
-  _ProblemsetMenuState createState() => _ProblemsetMenuState();
+  State<ProblemsetMenu> createState() => _ProblemsetMenuState();
 }
 
 class _ProblemsetMenuState extends State<ProblemsetMenu>
@@ -27,11 +27,13 @@ class _ProblemsetMenuState extends State<ProblemsetMenu>
   @override
   void initState() {
     super.initState();
-    fetchProblemsFromFirestore();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    )..forward();
+    if (mounted) {
+      fetchProblemsFromFirestore();
+      _animationController = AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 500),
+      )..forward();
+    }
   }
 
   Future<void> fetchProblemsFromFirestore() async {
@@ -41,14 +43,23 @@ class _ProblemsetMenuState extends State<ProblemsetMenu>
 
     try {
       QuerySnapshot querySnapshot = await problemsCollection.get();
-      problems =
+      List<Problem> fetchedProblems =
           querySnapshot.docs.map((doc) => Problem.fromFirestore(doc)).toList();
-      setState(() {
-        filteredProblems = problems;
-        _animationController.forward(from: 0.0);
-      });
+
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        setState(() {
+          problems = fetchedProblems;
+          filteredProblems = problems;
+          _animationController.forward(from: 0.0);
+        });
+      }
     } on FirebaseException catch (e) {
-      showSnackBar(context, e.code);
+      if (mounted) {
+        setState(() {
+          showSnackBar(context, e.code);
+        });
+      }
     }
   }
 
@@ -79,201 +90,214 @@ class _ProblemsetMenuState extends State<ProblemsetMenu>
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(width: widget.size.width * 0.127),
-        SizedBox(
-          height: 550,
-          width: widget.size.width * 0.5,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 35,
-                  child: TextField(
-                    onChanged: (value) {
-                      searchQuery = value;
-                      filterProblems();
-                    },
-                    cursorHeight: 15.0,
-                    style: const TextStyle(fontSize: 10),
-                    decoration: const InputDecoration(
-                      labelText: "Search",
-                      labelStyle:
-                          TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        size: 10,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Row(
+        children: [
+          SizedBox(width: widget.size.width * 0.127),
+          Container(
+            padding: EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.withOpacity(0.3)
+                  : Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            height: 550,
+            width: widget.size.width * 0.5,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 35,
+                    child: TextField(
+                      onChanged: (value) {
+                        searchQuery = value;
+                        filterProblems();
+                      },
+                      cursorHeight: 15.0,
+                      style: const TextStyle(fontSize: 10),
+                      decoration: const InputDecoration(
+                        labelText: "Search",
+                        labelStyle: TextStyle(
+                            fontSize: 10, fontWeight: FontWeight.bold),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          size: 10,
+                        ),
+                        border: OutlineInputBorder(),
                       ),
-                      border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    children: [
-                      const Text(
-                        'Difficulty',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        height: 35,
-                        child: buildDropdownFilter(
-                            "Difficulty",
-                            ["All", "Easy", "Medium", "Hard"],
-                            difficultyFilter, (value) {
-                          setState(() {
-                            difficultyFilter = value!;
-                            filterProblems();
-                          });
-                        }),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        'Status',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        height: 35,
-                        child: buildDropdownFilter(
-                            "Status",
-                            ["All", "Solved", "Attempted", "Todo"],
-                            statusFilter, (value) {
-                          setState(() {
-                            statusFilter = value!;
-                            filterProblems();
-                          });
-                        }),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        'Frequency',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        height: 35,
-                        child: buildDropdownFilter(
-                            "Frequency",
-                            ["All", "High", "Medium", "Low"],
-                            frequencyFilter, (value) {
-                          setState(() {
-                            frequencyFilter = value!;
-                            filterProblems();
-                          });
-                        }),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: filteredProblems.length,
-                  itemBuilder: (context, index) {
-                    Problem problem = filteredProblems[index];
-                    return AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        final double animationValue = CurvedAnimation(
-                          parent: _animationController,
-                          curve: Curves.easeInOut,
-                        ).value;
-
-                        return Transform.translate(
-                          offset: Offset(0, 50 * (1 - animationValue)),
-                          child: Opacity(
-                            opacity: animationValue,
-                            child: child,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Difficulty',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                          height: 35,
+                          child: buildDropdownFilter(
+                              "Difficulty",
+                              ["All", "Easy", "Medium", "Hard"],
+                              difficultyFilter, (value) {
+                            setState(() {
+                              difficultyFilter = value!;
+                              filterProblems();
+                            });
+                          }),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Status',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                          height: 35,
+                          child: buildDropdownFilter(
+                              "Status",
+                              ["All", "Solved", "Attempted", "Todo"],
+                              statusFilter, (value) {
+                            setState(() {
+                              statusFilter = value!;
+                              filterProblems();
+                            });
+                          }),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Frequency',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                          height: 35,
+                          child: buildDropdownFilter(
+                              "Frequency",
+                              ["All", "High", "Medium", "Low"],
+                              frequencyFilter, (value) {
+                            setState(() {
+                              frequencyFilter = value!;
+                              filterProblems();
+                            });
+                          }),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context)
+                        .copyWith(scrollbars: false),
+                    child: ListView.builder(
+                      itemCount: filteredProblems.length,
+                      itemBuilder: (context, index) {
+                        Problem problem = filteredProblems[index];
+                        return AnimatedBuilder(
+                          animation: _animationController,
+                          builder: (context, child) {
+                            final double animationValue = CurvedAnimation(
+                              parent: _animationController,
+                              curve: Curves.easeInOut,
+                            ).value;
+                            return Transform.translate(
+                              offset: Offset(0, 50 * (1 - animationValue)),
+                              child: Opacity(
+                                opacity: animationValue,
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            minVerticalPadding: 10,
+                            title: Text(
+                              problem.title,
+                              style: const TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              "Acceptance: ${problem.acceptanceRate.toStringAsFixed(1)}%",
+                              style: const TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                            trailing: Text(
+                              problem.difficulty,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: problem.difficulty == 'Easy'
+                                      ? Colors.teal
+                                      : problem.difficulty == 'Medium'
+                                          ? Colors.amber
+                                          : Colors.pink),
+                            ),
+                            leading: Icon(
+                              size: 15,
+                              problem.status == "Solved"
+                                  ? Icons.circle
+                                  : problem.status == 'Attempted'
+                                      ? Icons.circle
+                                      : Icons.circle_outlined,
+                              color: problem.status == "Solved"
+                                  ? Colors.green
+                                  : problem.status == 'Attempted'
+                                      ? Colors.amber
+                                      : Colors.grey,
+                            ),
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => BlackScreen(
+                                  teamid: null,
+                                  isOnline: false,
+                                  problem: problem,
+                                  size: MediaQuery.sizeOf(context),
+                                ),
+                              ));
+                            },
                           ),
                         );
                       },
-                      child: ListTile(
-                        minVerticalPadding: 10,
-                        tileColor: index % 2 != 0
-                            ? Colors.white.withOpacity(0.05)
-                            : Colors.transparent,
-                        title: Text(
-                          problem.title,
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                        subtitle: Text(
-                          "Acceptance: ${problem.acceptanceRate.toStringAsFixed(1)}%",
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                        trailing: Text(
-                          problem.difficulty,
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                              color: problem.difficulty == 'Easy'
-                                  ? Colors.teal
-                                  : problem.difficulty == 'Medium'
-                                      ? Colors.amber
-                                      : Colors.pink),
-                        ),
-                        leading: Icon(
-                          size: 15,
-                          problem.status == "Solved"
-                              ? Icons.circle
-                              : problem.status == 'Attempted'
-                                  ? Icons.circle
-                                  : Icons.circle_outlined,
-                          color: problem.status == "Solved"
-                              ? Colors.green
-                              : problem.status == 'Attempted'
-                                  ? Colors.amber
-                                  : Colors.grey,
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            FadeSlidePageRoute(
-                              page: BlackScreen(
-                                teamid: null,
-                                isOnline: false,
-                                problem: problem,
-                                size: MediaQuery.sizeOf(context),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 5),
-        Container(
-          padding: const EdgeInsets.all(5),
-          height: 600,
-          width: widget.size.width * 0.199,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [Companies(), PersonalStats()],
-          ),
-        )
-      ],
+          const SizedBox(width: 5),
+          Container(
+            padding: const EdgeInsets.all(5),
+            height: 600,
+            width: widget.size.width * 0.199,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [Companies(), PersonalStats()],
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -310,7 +334,7 @@ class FadeSlidePageRoute<T> extends PageRouteBuilder<T> {
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => page,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var begin = Offset(1.0, 0.0);
+            var begin = const Offset(1.0, 0.0);
             var end = Offset.zero;
             var curve = Curves.easeInOutCubic;
 
@@ -330,6 +354,6 @@ class FadeSlidePageRoute<T> extends PageRouteBuilder<T> {
               ),
             );
           },
-          transitionDuration: Duration(milliseconds: 500),
+          transitionDuration: const Duration(milliseconds: 500),
         );
 }

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:competitivecodingarena/Welcome/recommender/options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:competitivecodingarena/Snackbars&Pbars/snackbars.dart';
@@ -8,8 +10,7 @@ Future<Map<String, dynamic>> callCompiler(
   showCircularbar(context);
   try {
     final response = await http.post(
-      Uri.parse(
-          "https://uzyfh01rfj.execute-api.us-east-1.amazonaws.com/production"),
+      Uri.parse(""),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -17,7 +18,6 @@ Future<Map<String, dynamic>> callCompiler(
     );
     Navigator.of(context).pop();
     if (response.statusCode == 200) {
-      print(response.body);
       return jsonDecode(response.body);
     } else {
       print('Request failed with status: ${response.statusCode}');
@@ -38,16 +38,10 @@ Future<Map<String, dynamic>> callCompiler(
   }
 }
 
-Future<Map<String, dynamic>> invokeLambdaFunction({
-  required String userId,
-  required String reason,
-  required String skillLevel,
-  required List<String> topics,
-  required List<String> journey,
-}) async {
+Future<Map<String, dynamic>> invokeLambdaFunction() async {
   try {
     const url =
-        "https://23y7o6o923.execute-api.us-east-1.amazonaws.com/production";
+        "https://nsy1ivv3ii.execute-api.us-east-1.amazonaws.com/Production";
     if (url.isEmpty) {
       throw Exception('Recommender URL is not set in environment variables');
     }
@@ -60,17 +54,14 @@ Future<Map<String, dynamic>> invokeLambdaFunction({
       },
       body: jsonEncode({
         'user_data': {
-          'user_id': userId,
-          'topics': topics,
-          'journey': journey,
+          'user_id': FirebaseAuth.instance.currentUser!.uid,
+          'topics': pickRandomTopic(allTopics),
+          'journey': pickRandomTopic(journeys),
         },
-        'reason': reason,
-        'skillLevel': skillLevel,
+        'reason': pickRandomString(reasons),
+        'skillLevel': pickRandomString(skill),
       }),
     );
-
-    //print("Response status: ${response.statusCode}");
-    //print("Response body: ${response.body}");
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);

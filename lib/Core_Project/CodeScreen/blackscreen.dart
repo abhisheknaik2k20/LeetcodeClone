@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Submissions/submission.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:competitivecodingarena/Core_Project/CodeScreen/dragcontain.dart';
@@ -8,9 +9,9 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:segmented_button_slide/segmented_button_slide.dart';
 
-const appId = "04d6ec6fe978494aaa37d897dedbd1e3";
+const appId = "f8679213e89c4c75b50c926a3331f4c8";
 const token =
-    "007eJxTYDCedXf1Vd899Qdblwb4XWwtD5Fr1U3lapE+sTd8t83OQ58VGAxMUsxSk83SUi3NLUwsTRITE43NUywszVNSU5JSDFONw+adSGsIZGSY3c3MyMgAgSA+B0NiUkZmcUZqNgMDADjQIlw=";
+    "007eJxTYPi6VauEnZFHkeXsx8SCvAcX5kxMcVY/921W7O7HrUe2H/inwJBmYWZuaWRonGphmWySbG6aZGqQbGlklmhsbGyYZpJsMdVEOr0hkJFBP/QXMyMDBIL4HAyJSRmZxRmp2QwMAAYRIX0=";
 const channel = "abhishek";
 
 class BlackScreen extends StatefulWidget {
@@ -132,7 +133,7 @@ class _BlackScreenState extends State<BlackScreen> {
             .collection('chats')
             .add(message);
       } catch (e) {
-        print("Error sending message: $e");
+        //  print("Error sending message: $e");
       }
     }
   }
@@ -204,7 +205,7 @@ class _BlackScreenState extends State<BlackScreen> {
         _isAgoraInitialized = true;
       });
     } catch (e) {
-      print("Error initializing Agora: $e");
+      // print("Error initializing Agora: $e");
     }
   }
 
@@ -565,30 +566,39 @@ class _BlackScreenState extends State<BlackScreen> {
 
   void _addContainer(
       Problem problem, String name, IconData icon, MaterialColor color) {
-    setState(() {
-      containers.add(
-        DraggableResizableContainer(
-          teamid: widget.isOnline ? widget.teamid : null,
+    if (name == "Solutions") {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Submissions(
           problem: problem,
-          color: color,
-          icon: icon,
-          key: Key('container_$name'),
-          initialPosition: Offset(20.0 * (containers.length + 1), 70.0),
-          initialSize: Size(widget.size.width * 0.3, widget.size.height * 0.3),
-          minSize: const Size(100, 100),
-          maxSize: Size(widget.size.width * 0.9, widget.size.height * 0.9),
-          onRemove: _removeContainer,
-          label: name,
-          returnToButtonBar: _returnToButtonBar,
-          bringToFront: _bringContainerToFront,
         ),
-      );
-      widget.isOnline
-          ? onlineContainers
-              .removeWhere((container) => container['name'] == name)
-          : availableContainers
-              .removeWhere((container) => container['name'] == name);
-    });
+      ));
+    } else {
+      setState(() {
+        containers.add(
+          DraggableResizableContainer(
+            teamid: widget.isOnline ? widget.teamid : null,
+            problem: problem,
+            color: color,
+            icon: icon,
+            key: Key('container_$name'),
+            initialPosition: Offset(20.0 * (containers.length + 1), 70.0),
+            initialSize:
+                Size(widget.size.width * 0.3, widget.size.height * 0.3),
+            minSize: const Size(100, 100),
+            maxSize: Size(widget.size.width * 0.9, widget.size.height * 0.9),
+            onRemove: _removeContainer,
+            label: name,
+            returnToButtonBar: _returnToButtonBar,
+            bringToFront: _bringContainerToFront,
+          ),
+        );
+        widget.isOnline
+            ? onlineContainers
+                .removeWhere((container) => container['name'] == name)
+            : availableContainers
+                .removeWhere((container) => container['name'] == name);
+      });
+    }
   }
 
   void _removeContainer(Key key) {

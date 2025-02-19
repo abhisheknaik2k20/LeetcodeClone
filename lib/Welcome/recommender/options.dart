@@ -1,4 +1,6 @@
-List journeys = [
+import 'dart:math';
+
+List<String> journeys = [
   '10 Essential DP Patterns',
   '30 Days of JavaScript',
   'Programming Skills',
@@ -44,7 +46,7 @@ List journeys = [
   'Quantum Computing Primer'
 ];
 
-List allTopics = [
+List<String> allTopics = [
   'Arrays',
   'Strings',
   'Hash Table',
@@ -83,3 +85,19 @@ List allTopics = [
   'Data Structure Basics',
   'Algorithm'
 ];
+
+String pickRandomTopic(List<String> topics) {
+  final random = Random();
+  return topics[random.nextInt(topics.length)];
+}
+
+String pickRandomString(List<String> strings) {
+  if (strings.isEmpty) {
+    throw ArgumentError('The list of strings cannot be empty');
+  }
+  final random = Random();
+  return strings[random.nextInt(strings.length)];
+}
+
+List<String> reasons = ["interview", "learn"];
+List<String> skill = ["Advanced", "Beginner", "Intermediate", "Expert"];

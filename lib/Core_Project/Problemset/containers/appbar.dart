@@ -1,8 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:competitivecodingarena/Core_Project/Premium/buy_membership.dart';
+import 'package:competitivecodingarena/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:competitivecodingarena/Auth_Profile_Logic/login_signup.dart';
 import 'package:competitivecodingarena/Core_Project/Problemset/styles/styles.dart';
 import 'package:competitivecodingarena/Auth_Profile_Logic/Profile/ProfilePage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeAppBar extends StatefulWidget {
   final Function(String) setItem;
@@ -22,10 +27,35 @@ class _HomeAppBar extends State<HomeAppBar> {
     {"imageurl": "assets/images/settings.png", "name": "Settings"},
     {"imageurl": "assets/images/help.png", "name": "Help"},
   ];
+  bool isPremiumMember = false;
+
+  Future<void> checkPremiumStatus() async {
+    if (user != null) {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+
+      if (docSnapshot.exists) {
+        setState(() {
+          isPremiumMember = docSnapshot.data()?['isPremium'] ?? false;
+        });
+      }
+    }
+  }
 
   User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkPremiumStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return SliverAppBar(
       pinned: true,
       bottom: PreferredSize(
@@ -42,7 +72,9 @@ class _HomeAppBar extends State<HomeAppBar> {
         ),
       ),
       toolbarHeight: 50,
-      backgroundColor: const Color.fromARGB(255, 40, 40, 40),
+      backgroundColor: isDarkMode
+          ? const Color.fromARGB(255, 40, 40, 40)
+          : Colors.grey.shade100,
       title: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -59,7 +91,7 @@ class _HomeAppBar extends State<HomeAppBar> {
               "Problems",
               "Contest",
               "Road-Map",
-              "Interview",
+              "Community",
             ])
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -80,7 +112,9 @@ class _HomeAppBar extends State<HomeAppBar> {
                             fontSize: 15,
                             color: buttonText == selectedButton
                                 ? const Color.fromARGB(255, 209, 82, 124)
-                                : Colors.white,
+                                : isDarkMode
+                                    ? Colors.white
+                                    : Colors.grey.shade500,
                           )),
                       const SizedBox(
                         height: 8,
@@ -115,17 +149,26 @@ class _HomeAppBar extends State<HomeAppBar> {
             color: Colors.pink,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            style: buttonStyle2,
-            onPressed: () {},
-            child: const Text(
-              "Premium",
-              style: TextStyle(color: Colors.pink),
+        if (!isPremiumMember)
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: ElevatedButton(
+              style: buttonStyle2(context),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const BuyMembership()));
+              },
+              child: const Text(
+                "Premium",
+                style: TextStyle(color: Colors.pink),
+              ),
             ),
+          )
+        else
+          const Padding(
+            padding: EdgeInsets.all(5),
+            child: Icon(Icons.star, color: Colors.yellow),
           ),
-        ),
         const SizedBox(
           width: 200,
         )
@@ -144,8 +187,9 @@ class _HomeAppBar extends State<HomeAppBar> {
           enabled: false,
           child: ListTile(
             leading: CircleAvatar(
-              backgroundImage:
-                  user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+              backgroundImage: user?.photoURL != null
+                  ? CachedNetworkImageProvider(user!.photoURL!)
+                  : null,
               child: user?.photoURL == null
                   ? const Icon(Icons.person, color: Colors.white)
                   : null,
@@ -174,7 +218,7 @@ class _HomeAppBar extends State<HomeAppBar> {
             ),
           ),
         ),
-        const PopupMenuDivider(),
+        PopupMenuItem<String>(child: ThemeToggleButton()),
         PopupMenuItem<String>(
           value: 'sign_out',
           child: ListTile(
@@ -219,6 +263,28 @@ class _HomeAppBar extends State<HomeAppBar> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ThemeToggleButton extends ConsumerWidget {
+  const ThemeToggleButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeProvider);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    return ListTile(
+      onTap: () async {
+        // Use async/await since toggleTheme is asynchronous
+        await ref.read(themeProvider.notifier).toggleTheme();
+      },
+      contentPadding: const EdgeInsets.only(left: 10, right: 10),
+      leading: isDarkMode
+          ? const Icon(Icons.light_mode, color: Colors.yellow)
+          : const Icon(Icons.dark_mode, color: Colors.blue),
+      title: Text(isDarkMode ? 'Light-Mode' : 'Dark-Mode'),
     );
   }
 }

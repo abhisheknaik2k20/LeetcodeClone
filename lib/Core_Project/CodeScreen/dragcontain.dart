@@ -2,11 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/console.dart';
 import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/description.dart';
-import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/submission.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Submissions/submission.dart';
 import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/testcase.dart';
 import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/texteditor.dart';
 import 'package:competitivecodingarena/Core_Project/Contest/OnlineEditor.dart';
 import 'package:competitivecodingarena/Core_Project/Problemset/examples/exampleprobs.dart';
+
+List<Map<String, dynamic>> availableContainers = [
+  {'name': 'Description', 'icon': Icons.description, 'color': Colors.red},
+  {'name': 'Code', 'icon': Icons.code, 'color': Colors.blue},
+  {'name': 'Solutions', 'icon': Icons.lightbulb, 'color': Colors.yellow},
+  {'name': 'TestCases', 'icon': Icons.check_box, 'color': Colors.green},
+  {'name': 'Console', 'icon': Icons.check_box, 'color': Colors.indigo},
+];
+
+List<Map<String, dynamic>> onlineContainers = [
+  {'name': 'Description', 'icon': Icons.description, 'color': Colors.red},
+  {'name': 'OnlineCode', 'icon': Icons.code, 'color': Colors.blue},
+  {'name': 'Solutions', 'icon': Icons.lightbulb, 'color': Colors.yellow},
+  {'name': 'TestCases', 'icon': Icons.check_box, 'color': Colors.green},
+  {'name': 'Console', 'icon': Icons.check_box, 'color': Colors.indigo},
+];
 
 class DraggableResizableContainer extends StatefulWidget {
   final String? teamid;
@@ -21,6 +37,7 @@ class DraggableResizableContainer extends StatefulWidget {
   final String label;
   final Function(String, IconData, MaterialColor) returnToButtonBar;
   final Function(Key) bringToFront;
+  final Function(BuildContext, Widget)? onNavigate;
 
   const DraggableResizableContainer({
     required this.teamid,
@@ -36,6 +53,7 @@ class DraggableResizableContainer extends StatefulWidget {
     required this.label,
     required this.returnToButtonBar,
     required this.bringToFront,
+    this.onNavigate,
   }) : super(key: key);
 
   @override
@@ -186,7 +204,7 @@ class _DraggableResizableContainerState
     );
   }
 
-  Widget _buildContentByLabel() {
+  _buildContentByLabel() {
     switch (widget.label) {
       case 'Description':
         return problemToRichText(widget.problem);
@@ -198,7 +216,15 @@ class _DraggableResizableContainerState
       case 'TestCases':
         return Testcase(problem: widget.problem);
       case 'Solutions':
-        return const Submissions();
+        Navigator(
+          onGenerateRoute: (settings) {
+            return MaterialPageRoute(
+              builder: (context) => Submissions(
+                problem: widget.problem,
+              ),
+            );
+          },
+        );
       case 'Console':
         return const Console();
       case 'OnlineCode':

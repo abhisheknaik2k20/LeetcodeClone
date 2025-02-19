@@ -149,13 +149,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                 } else {
                   showCircularbar(context);
                   try {
-                    Map<String, dynamic> getdata = await invokeLambdaFunction(
-                      userId: FirebaseAuth.instance.currentUser!.uid,
-                      reason: preferences['reason'],
-                      skillLevel: preferences['skillLevel'],
-                      topics: preferences['topics'],
-                      journey: preferences['journey'],
-                    );
+                    Map<String, dynamic> getdata = await invokeLambdaFunction();
                     Map<String, dynamic> body = jsonDecode(getdata['body']);
                     List<dynamic> programmingRoadmap =
                         body['programming_roadmap'];
@@ -173,7 +167,6 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                         .doc(FirebaseAuth.instance.currentUser!.uid)
                         .update({"roadmap": roadmapWithProgress});
                     Navigator.of(context).pop();
-                    Navigator.of(context).pop(true);
                   } catch (e) {
                     print("Error invoking Lambda function: $e");
                   }

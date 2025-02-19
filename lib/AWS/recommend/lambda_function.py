@@ -194,8 +194,6 @@ def lambda_handler(event, context):
     ('user19', {'reason': 'learn', 'skillLevel': 'Beginner', 'topics': ['Recursion', 'Backtracking'], 'journey': ['Data Structure I', 'Binary Search I']}),
     ('user20', {'reason': 'career', 'skillLevel': 'Intermediate', 'topics': ['Sliding Window', 'Tree'], 'journey': ['Algorithm I', 'Tree I']})
 ]
-
-    
     for user_id, preferences in users_data:
         recommender.add_user(user_id, preferences)
     user_id = user_data.get('user_id', 'new_user')

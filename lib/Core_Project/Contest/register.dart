@@ -512,8 +512,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       const SnackBar(content: Text('Registered as Single Player Successfully')),
     );
   }
-
-  String _formatDuration(Duration d) {
-    return '${d.inMinutes.remainder(60).toString().padLeft(2, '0')}:${d.inSeconds.remainder(60).toString().padLeft(2, '0')}';
-  }
 }

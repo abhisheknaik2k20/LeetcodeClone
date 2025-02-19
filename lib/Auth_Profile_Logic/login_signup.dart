@@ -1,10 +1,58 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:competitivecodingarena/Core_Project/Problemset/containers/homescreen.dart';
 import 'package:competitivecodingarena/Snackbars&Pbars/snackbars.dart';
 import 'package:competitivecodingarena/Auth_Profile_Logic/VerifyMail/verifyMail.dart';
 import 'package:competitivecodingarena/Welcome/welcome.dart';
+
+Future<String?> generateTokenForUser() async {
+  try {
+    String? token = await FirebaseMessaging.instance.getToken(
+        vapidKey:
+            "BGxdz3CJNo8eROmc5hd7PBQ6AreBbQ4w4SKU5OEIrIwOymU6bloDleVFBbULqlF11wtFy7BdXt0CzIskUnB7tVQ");
+    return token;
+  } catch (exception) {
+    print(exception);
+    return null;
+  }
+}
+
+Future<void> updatetoken(String token, User user) async {
+  try {
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
+    await userDoc.update({
+      'token': token,
+    });
+  } catch (exception) {
+    // ignore: avoid_print
+    print(exception);
+  }
+}
+
+Future<void> saveUserDataToFirestore(User user, {String? name}) async {
+  final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+  final docSnapshot = await userDoc.get();
+  final String? token = await generateTokenForUser();
+  if (!docSnapshot.exists) {
+    await userDoc.set({
+      'email': user.email,
+      'name': name ?? user.displayName ?? '',
+      'createdAt': FieldValue.serverTimestamp(),
+      'lastLogin': FieldValue.serverTimestamp(),
+      'roadmap': null,
+      'token': token,
+      'isPremium': false,
+    });
+  } else {
+    await userDoc.update({
+      'lastLogin': FieldValue.serverTimestamp(),
+      'token': token,
+    });
+  }
+}
 
 void loginLogic(
   BuildContext context,
@@ -14,8 +62,9 @@ void loginLogic(
   bool isLoginSuccessful = false;
   showCircularbar(context);
   try {
-    await FirebaseAuth.instance
+    final userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
+    await saveUserDataToFirestore(userCredential.user!);
     isLoginSuccessful = true;
   } on FirebaseAuthException catch (e) {
     showSnackBar(context, e.code);
@@ -45,11 +94,12 @@ void signUpLogic(
   showCircularbar(context);
   bool isSignupSuccessful = false;
   try {
-    await FirebaseAuth.instance
+    final userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
-    await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
-    await FirebaseAuth.instance.currentUser!.updatePassword(password);
-    await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+    await userCredential.user!.updateDisplayName(name);
+    await userCredential.user!.updatePassword(password);
+    await userCredential.user!.sendEmailVerification();
+    await saveUserDataToFirestore(userCredential.user!, name: name);
     isSignupSuccessful = true;
   } on FirebaseAuthException catch (e) {
     showSnackBar(context, e.code);
@@ -66,7 +116,6 @@ void logoutLogic(BuildContext context) async {
   showCircularbar(context);
   try {
     await FirebaseAuth.instance.signOut();
-
     isLoginOutSuccessful = true;
   } on FirebaseAuthException catch (e) {
     showSnackBar(context, e.code);
@@ -83,16 +132,11 @@ void logoutLogic(BuildContext context) async {
 Future<UserCredential?> signInWithGoogle(BuildContext context) async {
   GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
   try {
+    showCircularbar(context);
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
-    final userDoc = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-    final docSnapshot = await userDoc.get();
-    if (!docSnapshot.exists || !docSnapshot.data()!.containsKey('roadmap')) {
-      await userDoc.set({"roadmap": null}, SetOptions(merge: true));
-    }
-
+    await saveUserDataToFirestore(userCredential.user!);
+    Navigator.of(context).pop();
     return userCredential;
   } on FirebaseAuthException catch (e) {
     showSnackBar(context, e.message!);
@@ -111,6 +155,7 @@ Future<UserCredential?> gitHubSignIn(BuildContext context) async {
     try {
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithPopup(githubAuthProvider);
+      await saveUserDataToFirestore(userCredential.user!);
       return userCredential;
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!);

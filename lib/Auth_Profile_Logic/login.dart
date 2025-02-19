@@ -389,7 +389,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
           Text(
-            '© 2024 trademarkR',
+            '© 2025 trademark',
             style: TextStyle(color: Colors.grey[500], fontSize: 14),
           ),
         ],

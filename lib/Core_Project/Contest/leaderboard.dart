@@ -58,18 +58,22 @@ class _CategoriesState extends State<Categories> {
             padding: const EdgeInsets.only(
               left: 20,
             ),
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: 25,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Category(
-                  title: randomNames[index],
-                  numOfItems: index,
-                  imageUrl: randommessages[index],
-                  press: () {},
-                );
-              },
+            child: ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: 25,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Category(
+                    title: randomNames[index],
+                    numOfItems: index,
+                    imageUrl: randommessages[index],
+                    press: () {},
+                  );
+                },
+              ),
             ),
           ),
         ],

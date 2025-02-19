@@ -18,12 +18,18 @@ class _CompaniesState extends State<Companies> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       height: 400,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: const Color.fromRGBO(255, 255, 255, 1).withOpacity(0.1),
-          borderRadius: const BorderRadius.all(Radius.circular(10))),
+        color: Theme.of(context).brightness != Brightness.light
+            ? Color.fromRGBO(255, 255, 255, 1).withOpacity(0.1)
+            : Colors.grey.withOpacity(0.3),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,8 +37,9 @@ class _CompaniesState extends State<Companies> {
             "Trending Companies",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white.withOpacity(0.9),
-                fontSize: 12),
+                color:
+                    isDarkMode ? Colors.white.withOpacity(0.9) : Colors.pink,
+                fontSize: 15),
           ),
           const SizedBox(
             height: 10,
@@ -80,7 +87,7 @@ class _CompaniesState extends State<Companies> {
                   for (Map<String, dynamic> company in filteredCompanies)
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.blueGrey.withOpacity(0.1),
                         borderRadius: const BorderRadius.all(
                           Radius.circular(20),
                         ),

@@ -119,40 +119,33 @@ class _ScreenBannerAndFeatured extends State<ScreenBannerAndFeatured>
                       ),
                     ),
                     const SizedBox(height: 20),
-                    ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return const LinearGradient(
-                          colors: [Colors.white, Colors.white],
-                        ).createShader(bounds);
-                      },
-                      child: AnimatedBuilder(
-                        animation: _pulseController,
-                        builder: (_, child) => Transform.scale(
-                          scale: 1 + 0.03 * _pulseController.value,
-                          child: child,
-                        ),
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: const TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "Competitive Coding Arena",
-                                style: TextStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                    AnimatedBuilder(
+                      animation: _pulseController,
+                      builder: (_, child) => Transform.scale(
+                        scale: 1 + 0.03 * _pulseController.value,
+                        child: child,
+                      ),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Competitive Coding Arena",
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
-                              TextSpan(
-                                text: " Contest",
-                                style: TextStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                            TextSpan(
+                              text: " Contest",
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'package:competitivecodingarena/Clusters/clusters.dart';
 import 'package:flutter/material.dart';
 import 'package:competitivecodingarena/Core_Project/Contest/banner.dart';
 import 'package:competitivecodingarena/Core_Project/Contest/roadmap.dart';
@@ -84,8 +85,10 @@ class _LeetCodeProblemsetHomescreenState
         return AdsAndCalenderAndProblems(size: widget.size);
       case 'Contest':
         return ScreenBannerAndFeatured(size: widget.size);
-      default:
+      case 'Road-Map':
         return const DSARoadmapScreen();
+      default:
+        return ClusterDisplayScreen();
     }
   }
 

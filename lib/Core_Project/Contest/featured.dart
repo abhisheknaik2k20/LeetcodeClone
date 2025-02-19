@@ -28,18 +28,30 @@ class _FeaturedContestState extends State<FeaturedContest> {
   void generateList() async {
     try {
       List<Contest> fetchedContests = await fetchContestsFromFirestore();
-      setState(() {
-        contests = fetchedContests;
-      });
+      if (mounted) {
+        setState(() {
+          contests = fetchedContests;
+        });
+      }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
   @override
   void initState() {
     super.initState();
-    generateList();
+    if (mounted) {
+      generateList();
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override

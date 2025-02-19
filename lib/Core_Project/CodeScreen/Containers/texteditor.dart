@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:competitivecodingarena/Core_Project/CodeScreen/Containers/responses.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
@@ -26,13 +29,19 @@ class Texteditor extends ConsumerStatefulWidget {
 class _TexteditorState extends ConsumerState<Texteditor> {
   String selectedLanguage = 'python';
   late CodeController controller;
-
+  late FirebaseFirestore _firebaseFirestore;
+  late String _authid;
+  late String _authname;
   @override
   void initState() {
     super.initState();
+    print(javaresponses.length);
     controller = CodeController(
       language: python,
     );
+    _firebaseFirestore = FirebaseFirestore.instance;
+    _authid = FirebaseAuth.instance.currentUser!.uid;
+    _authname = FirebaseAuth.instance.currentUser!.displayName ?? "Guest";
   }
 
   void updateLanguage(String? newLanguage) {
@@ -56,6 +65,39 @@ class _TexteditorState extends ConsumerState<Texteditor> {
     }
   }
 
+  setSolution(Map<String, dynamic> data, String solution) async {
+    data['solution'] = solution;
+    data['name'] = _authname;
+    _firebaseFirestore
+        .collection("problems")
+        .doc(widget.problem.id)
+        .collection("$selectedLanguage solutions")
+        .doc(_authid)
+        .get()
+        .then((docSnapshot) {
+      if (docSnapshot.exists) {
+        return docSnapshot.reference.update(data);
+      } else {
+        return docSnapshot.reference.set(data);
+      }
+    }).catchError((error) {
+      print("Error updating/creating document: $error");
+    });
+  }
+
+  bool hasCompilerError(Map result) {
+    String body = result['body'].toString().toLowerCase();
+    final List<String> errorIndicators = [
+      'error:',
+      'syntaxerror',
+      'stderr:',
+      'execution error:',
+      'invalid syntax'
+    ];
+    return errorIndicators
+        .any((indicator) => body.contains(indicator.toLowerCase()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -65,11 +107,19 @@ class _TexteditorState extends ConsumerState<Texteditor> {
           children: [
             ElevatedButton(
               onPressed: () async {
+                String program = controller.text;
                 ref.read(consoleProvider.state).state = "Running.....";
-                Map<String, dynamic> result = await callCompiler(
+                Map result = await callCompiler(
                     context, selectedLanguage, controller.text);
-                ref.read(consoleProvider.state).state =
-                    result['body'].toString();
+
+                if (hasCompilerError(result)) {
+                  ref.read(consoleProvider.state).state =
+                      "Error: ${result['body']}";
+                } else {
+                  ref.read(consoleProvider.state).state =
+                      result['body'].toString();
+                  setSolution(result["body"], program);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2CBB5D),
