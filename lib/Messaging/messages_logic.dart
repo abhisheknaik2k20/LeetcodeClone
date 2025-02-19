@@ -8,7 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotification {
   static Future<String> getAccessToken() async {
-    final serviceAccountJSON = {};
+    final serviceAccountJSON = {"NOTHING HERE"};
     List<String> scopes = [
       'https://www.googleapis.com/auth/cloud-platform',
       'https://www.googleapis.com/auth/firebase.messaging',
