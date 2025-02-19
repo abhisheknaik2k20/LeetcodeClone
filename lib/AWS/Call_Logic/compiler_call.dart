@@ -10,8 +10,7 @@ Future<Map<String, dynamic>> callCompiler(
   showCircularbar(context);
   try {
     final response = await http.post(
-      Uri.parse(
-          "https://uzyfh01rfj.execute-api.us-east-1.amazonaws.com/production"),
+      Uri.parse(""),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
